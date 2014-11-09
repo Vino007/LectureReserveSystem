@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<!-- 使用spring来管理struts的Action -->
+	<constant name="struts.objectFactory" value="spring"></constant>
+
+	<!--namespace用来指定action的url访问路径 -->
+	<package name="action" extends="struts-default">
+		<global-results>
+			<result name="success">/success.jsp</result>
+		</global-results>
+		<!-- class的值与bean的name值对应 -->
+		<action name="LoginAction" class="loginAction">
+			<result name="success">/home.jsp</result>
+			<result name="login">/login.jsp</result>
+			<!-- defaultStack必须要有，要不然会获取不了表单数据 -->
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<interceptor-ref name="logger" />
+			<interceptor-ref name="timer"></interceptor-ref>
+		</action>
+		
+		<action name="LectureAction" class="lectureAction">
+			<result name="success">/querylecture.jsp</result>
+		</action>
+		
+		<action name="AddLectureAction" class="lectureAction" 
+			method="addLecture">
+			<result name="success">/lectureManage.jsp</result>
+		</action>
+
+		<action name="UpdateLectureAction" class="lectureAction"
+			method="updateLecture">
+			<result name="success">/lectureManage.jsp</result>
+		</action>
+
+		<action name="DeleteLectureAction" class="lectureAction"
+			method="deleteLecture">
+			<result name="success">/lectureManage.jsp</result>
+		</action>
+
+
+	</package>
+
+</struts>
