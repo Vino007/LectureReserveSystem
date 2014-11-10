@@ -12,12 +12,13 @@ public class LoginAction extends BaseAction  {
 	public String execute() throws Exception {
 		
 		user=userService.login(user);
+		System.out.println(user.getName());
 		if(user==null){
 			addActionError("用户名密码错误");
 		return LOGIN;
 		}
 		else{
-			
+			//将user保存到session域中，方便各个action获取user
 			ActionContext.getContext().getSession().put("user", user);
 		return SUCCESS;}
 	}

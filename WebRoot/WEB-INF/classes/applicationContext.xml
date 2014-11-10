@@ -23,7 +23,7 @@
 	</bean>
 	<bean id="baseAction" name="baseAction" class="com.vino.lecture.action.BaseAction" scope="prototype">
 		<property name="userService" ref="userService"></property>
-		<property name="user" ref="user"></property>
+		 <property name="user" ref="user"></property> 
 		<property name="lectureService" ref="lectureService"></property>
 	</bean>
 	<bean id="loginAction" name="loginAction" class="com.vino.lecture.action.LoginAction"
@@ -33,6 +33,7 @@
 	</bean>
 	<bean id="lectureAction" name="lectureAction" class="com.vino.lecture.action.LectureAction"
 		scope="prototype" parent="baseAction">
+		<property name="reserveInfo" ref="reserveInfo"></property>
 		</bean>
 	
 	<!-- =============================================================================== -->

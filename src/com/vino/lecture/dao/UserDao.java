@@ -20,6 +20,7 @@ public class UserDao extends BaseDao {
 		//System.out.println(user.getUsername()+user.getPassword());
 		query=query.setString(0, user.getUsername());
 		query=query.setString(1, user.getPassword());
+		@SuppressWarnings("unchecked")
 		List<User> users=(List<User>) query.list();				
 		if(users.size()==0){
 			return null;

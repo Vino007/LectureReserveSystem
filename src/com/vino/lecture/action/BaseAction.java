@@ -8,6 +8,8 @@ import com.vino.lecture.service.UserService;
 public class BaseAction extends ActionSupport{
 	
 	/**
+	 * action的基类，注入了userService，user,lectureService属性
+	 * 关于action的属性注入本项目采用了xml方式，其他层的属性注入采用了注解方式
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;

@@ -26,6 +26,13 @@
 		<action name="LectureAction" class="lectureAction">
 			<result name="success">/querylecture.jsp</result>
 		</action>
+		<action name="QueryAndReserveLectureAction" class="lectureAction">
+			<result name="success">/reserveLecture.jsp</result>
+		</action>
+		<action name="ReserveLectureAction" class="lectureAction" 
+			method="reserveLecture">
+			<result name="success">/lectureManage.jsp</result>
+		</action>
 		
 		<action name="AddLectureAction" class="lectureAction" 
 			method="addLecture">

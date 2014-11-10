@@ -14,6 +14,7 @@ public class LectureInfo {
 	public long getId() {
 		return id;
 	}
+	@SuppressWarnings("unused")
 	private void setId(long id) {
 		this.id = id;
 	}
