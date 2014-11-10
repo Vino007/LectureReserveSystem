@@ -45,12 +45,12 @@
 			<%-- <s:param name="reserveInfo.username" value="%{user.username}"></s:param>
 			 <s:param name="reserveInfo.lectureId" value="#lectureInfo.id"></s:param> 
 			<s:submit value="预定"></s:submit> --%>
-			<s:form action="ReserveLectureAction" method="post">
+			<s:form action="LectureAction" method="post">
 			<s:hidden name="reserveInfo.username" value="%{#session.user.username}"></s:hidden>
 			<s:hidden name="reserveInfo.name" value="%{#session.user.name}"></s:hidden>
-			<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>
-			
-			<s:submit value="预定"></s:submit>
+			<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>		
+			<s:submit value="预定" method="reserveLecture" ></s:submit>
+			<s:submit value="取消" method="cancelReserveLecture" ></s:submit>
 			</s:form>
 							
 			</table>

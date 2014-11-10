@@ -9,11 +9,11 @@
 </head>
 <body>
 <center>
-	<s:a href="LectureAction">讲座查询</s:a><br>
+	<s:a href="QueryLectureAction">讲座查询</s:a><br>
 	<s:a href="addLecture.jsp">讲座新增</s:a><br>
 	<s:a href="deleteLecture.jsp">讲座删除</s:a><br>
 	<s:a href="updateLecture.jsp">讲座修改</s:a><br>
-	<s:a href="QueryAndReserveLectureAction">讲座预定</s:a>
+	<s:a href="QueryAvailableLectureAction">讲座预定</s:a>
 	<hr>
 	<hr>
 	<s:if test="#request.Result=='success'">

@@ -15,6 +15,9 @@ public class LectureService extends BaseService{
 	public List<LectureInfo> queryAllLecture(){
 		return lectureDao.queryAllLectureInfo();
 	}
+	public List<LectureInfo> queryAvailableLecture(){
+		return lectureDao.queryAvailableLectureInfo();
+	}
 	
 	public boolean addLecture(LectureInfo lectureInfo){
 		return lectureDao.insertLectureInfo(lectureInfo);
@@ -34,8 +37,9 @@ public class LectureService extends BaseService{
 		if(lectureDao.checkReserveInfo(reserveInfo))		
 		return lectureDao.reserveLecture(reserveInfo);
 		else
-			return "repeat";//重复预约
-		
-		
+			return "repeat";//重复预约		
+	}
+	public boolean cancelReserveLecture(ReserveInfo reserveInfo){
+		return lectureDao.cancelReserveLecture(reserveInfo);
 	}
 }

@@ -11,6 +11,20 @@ public class LectureInfo {
 	private String address;
 	private int maxPeople;
 	private String content;
+	private int available;
+	private int currentPeople;
+	public int getAvailable() {
+		return available;
+	}
+	public void setAvailable(int available) {
+		this.available = available;
+	}
+	public int getCurrentPeople() {
+		return currentPeople;
+	}
+	public void setCurrentPeople(int currentPeople) {
+		this.currentPeople = currentPeople;
+	}
 	public long getId() {
 		return id;
 	}

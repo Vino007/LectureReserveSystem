@@ -14,5 +14,7 @@
     		<property name="time" column="time"></property>
     		<property name="maxPeople" column="maxpeople"></property>
     		<property name="content" column="content"></property>
+    		<property name="currentPeople" column="currentpeople"></property>
+    		<property name="available" column="available"></property>
     	</class>
     </hibernate-mapping>

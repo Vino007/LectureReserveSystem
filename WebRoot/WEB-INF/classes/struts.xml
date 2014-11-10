@@ -7,7 +7,8 @@
 	<constant name="struts.devMode" value="true" />
 	<!-- 使用spring来管理struts的Action -->
 	<constant name="struts.objectFactory" value="spring"></constant>
-
+	<!-- 在submit使用method必须要加下面这句 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
 	<!--namespace用来指定action的url访问路径 -->
 	<package name="action" extends="struts-default">
 		<global-results>
@@ -23,19 +24,21 @@
 			<interceptor-ref name="timer"></interceptor-ref>
 		</action>
 		
+		<!-- 预约和取消预约的action采用submit中使用submit方式 -->
 		<action name="LectureAction" class="lectureAction">
-			<result name="success">/querylecture.jsp</result>
-		</action>
-		<action name="QueryAndReserveLectureAction" class="lectureAction">
-			<result name="success">/reserveLecture.jsp</result>
-		</action>
-		<action name="ReserveLectureAction" class="lectureAction" 
-			method="reserveLecture">
 			<result name="success">/lectureManage.jsp</result>
 		</action>
-		
-		<action name="AddLectureAction" class="lectureAction" 
-			method="addLecture">
+		<!-- 查询所有讲座 -->
+		<action name="QueryLectureAction" class="lectureAction" method="queryAllLecture">
+			<result name="success">/querylecture.jsp</result>
+		</action>
+		<!-- 查询可预约的讲座 -->
+		<action name="QueryAvailableLectureAction" class="lectureAction"
+			method="queryAvailableLecture">
+			<result name="success">/reserveLecture.jsp</result>
+		</action>
+				
+		<action name="AddLectureAction" class="lectureAction" method="addLecture">
 			<result name="success">/lectureManage.jsp</result>
 		</action>
 
