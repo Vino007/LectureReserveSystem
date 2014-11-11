@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
- <%@ taglib prefix="s" uri="/struts-tags" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,55 +8,54 @@
 <title>预定讲座</title>
 </head>
 <body>
-<s:iterator value="lectureInfos" status="status">
-				
-		<table border="2">		
-		<tr>
-			<td>id</td>
-			<td>${id}</td>
-			</tr>
-		<tr>
-			<td>标题</td>
-			<td>${title}</td>
+<center>
+	<s:iterator value="lectureInfos" status="status" var="li">
+		<table border="2" width="400">
+			<tr>
+				<td>id</td>
+				<td>${id}</td>
 			</tr>
 			<tr>
-			<td>地点</td>
-			<td>${address}</td>
+				<td>标题</td>
+				<td>${title}</td>
 			</tr>
 			<tr>
-			<td>时间</td>
-			<td>${time}</td>
+				<td>地点</td>
+				<td>${address}</td>
 			</tr>
 			<tr>
-			<td>主讲人</td>
-			<td>${lecturer}</td>
+				<td>时间</td>
+				<td>${time}</td>
 			</tr>
 			<tr>
-			<td>最大人数</td>
-			<td>${maxPeople}</td>
+				<td>主讲人</td>
+				<td>${lecturer}</td>
 			</tr>
 			<tr>
-			<td>讲座介绍</td>
-			<td><s:property value="content"/></td>
-			</tr>	
-		
-			<%-- <s:param name="reserveInfo.name" value="#user.name"></s:param> --%>
-			
-			<%-- <s:param name="reserveInfo.username" value="%{user.username}"></s:param>
-			 <s:param name="reserveInfo.lectureId" value="#lectureInfo.id"></s:param> 
-			<s:submit value="预定"></s:submit> --%>
-			<s:form action="LectureAction" method="post">
-			<s:hidden name="reserveInfo.username" value="%{#session.user.username}"></s:hidden>
-			<s:hidden name="reserveInfo.name" value="%{#session.user.name}"></s:hidden>
-			<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>		
-			<s:submit value="预定" method="reserveLecture" ></s:submit>
-			<s:submit value="取消" method="cancelReserveLecture" ></s:submit>
-			</s:form>
-							
+				<td>最大人数</td>
+				<td>${maxPeople}</td>
+			</tr>
+			<tr>
+				<td>当前人数</td>
+				<td>${currentPeople}</td>
+			</tr>
+			<tr>
+				<td>讲座介绍</td>
+				<td><s:property value="content" /></td>
+			</tr>
 			</table>
+			<s:form action="LectureAction" method="post" theme="simple">
+				<s:hidden name="reserveInfo.username"
+					value="%{#session.user.username}"></s:hidden>
+				<s:hidden name="reserveInfo.name" value="%{#session.user.name}"></s:hidden>
+				<!-- 此id为lectureInfo的id -->
+				<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>			
+				<s:submit value="预定" method="reserveLecture"></s:submit>
+				<s:submit value="取消" method="cancelReserveLecture"></s:submit>			
+			</s:form>
 			
-			<p><p><p>
-		</s:iterator>
-		
+		<p><p><p>
+	</s:iterator>
+</center>
 </body>
 </html>

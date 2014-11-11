@@ -18,6 +18,13 @@ public class LectureService extends BaseService{
 	public List<LectureInfo> queryAvailableLecture(){
 		return lectureDao.queryAvailableLectureInfo();
 	}
+	public boolean updateCurrentPeople(ReserveInfo reserveInfo){
+		lectureDao.updateCurrentPeople(reserveInfo);
+		return true;
+	}
+	public void checkCurrentPeople(LectureInfo lectureInfo){
+		
+	}
 	
 	public boolean addLecture(LectureInfo lectureInfo){
 		return lectureDao.insertLectureInfo(lectureInfo);
@@ -34,12 +41,19 @@ public class LectureService extends BaseService{
 	 * @return
 	 */
 	public String reserveLecture(ReserveInfo reserveInfo){
-		if(lectureDao.checkReserveInfo(reserveInfo))		
-		return lectureDao.reserveLecture(reserveInfo);
+		if(lectureDao.checkReserveInfo(reserveInfo)){
+		 if(lectureDao.checkCurrentPeople(reserveInfo))
+				return lectureDao.reserveLecture(reserveInfo);
+			else 
+				return "overflow";
+		 }
 		else
 			return "repeat";//÷ÿ∏¥‘§‘º		
 	}
-	public boolean cancelReserveLecture(ReserveInfo reserveInfo){
+	public String cancelReserveLecture(ReserveInfo reserveInfo){
+		if(lectureDao.checkReserveInfo(reserveInfo))
+			return "alread_cancel";
+		else
 		return lectureDao.cancelReserveLecture(reserveInfo);
 	}
 }

@@ -126,22 +126,26 @@ public class LectureAction extends BaseAction {
 	 */
 	public String reserveLecture() throws Exception {
 		System.out.println("reserveLecture执行");
+		lectureService.updateCurrentPeople(reserveInfo);
 		if (lectureService.reserveLecture(reserveInfo).equals("success"))
-			addActionMessage("success");
+			addActionMessage("预约成功");
 		else if (lectureService.reserveLecture(reserveInfo).equals("fail"))
-			addActionMessage("fail");
+			addActionMessage("预约失败");
 		else if (lectureService.reserveLecture(reserveInfo).equals("repeat"))
 			addActionMessage("已经预约过了");
+		else if (lectureService.reserveLecture(reserveInfo).equals("overflow"))
+			addActionMessage("预约人数已满");
 		return SUCCESS;
 	}
 
 	public String cancelReserveLecture() throws Exception {
 		System.out.println("cancelreserveLecture执行");
-		if (lectureService.cancelReserveLecture(reserveInfo))
-			addActionMessage("success");
-		else
-			addActionMessage("fail");
-
+		if (lectureService.cancelReserveLecture(reserveInfo).equals("success"))
+			addActionMessage("取消预约成功");
+		else if(lectureService.cancelReserveLecture(reserveInfo).equals("fail"))
+			addActionMessage("取消预约失败");
+		else if(lectureService.cancelReserveLecture(reserveInfo).equals("alread_cancel"))
+			addActionMessage("已经取消了");
 		return SUCCESS;
 	}
 

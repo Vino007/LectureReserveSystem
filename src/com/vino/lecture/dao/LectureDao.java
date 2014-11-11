@@ -1,6 +1,7 @@
 package com.vino.lecture.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -29,13 +30,13 @@ public class LectureDao extends BaseDao {
 
 	/**
 	 * 查询允许预约的讲座
-	 * 
+	 * available 非0时为可预约！
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	public List<LectureInfo> queryAvailableLectureInfo() {
 		Query query = sessionFactory.getCurrentSession().createQuery(
-				"from LectureInfo l where l.available=?");
+				"from LectureInfo l where l.available>=?");
 		query.setInteger(0, 1);
 		@SuppressWarnings("unchecked")
 		List<LectureInfo> lectureInfos = (List<LectureInfo>) query.list();
@@ -79,6 +80,7 @@ public class LectureDao extends BaseDao {
 		info.setLecturer(lectureInfo.getLecturer());
 		info.setMaxPeople(lectureInfo.getMaxPeople());
 		info.setContent(lectureInfo.getContent());
+		info.setAvailable(1);//设置默认可预约
 		try {
 			session.update(info);
 		} catch (Exception e) {
@@ -131,7 +133,7 @@ public class LectureDao extends BaseDao {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public boolean cancelReserveLecture(ReserveInfo reserveInfo) {
+	public String cancelReserveLecture(ReserveInfo reserveInfo) {
 		/*
 		 * 通过HQL语句来删除对象
 		 */
@@ -142,9 +144,9 @@ public class LectureDao extends BaseDao {
 		try {
 			query.executeUpdate();
 		} catch (Exception e) {
-			return false;
+			return "fail";
 		}
-		return true;
+		return "success";
 	}
 
 	/**
@@ -165,5 +167,57 @@ public class LectureDao extends BaseDao {
 			return true;
 		else
 			return false;
+	}
+	/**
+	 * 通过count（）计算reserveinfo表中当前预约人数并更新lectureinfo表中的currentpeople字段
+	 * @param reserveInfo
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public boolean updateCurrentPeople(ReserveInfo reserveInfo){
+		/*
+		 * 计算预约人数
+		 */
+		Query query=sessionFactory.getCurrentSession()
+				.createQuery("select count(*)  from ReserveInfo r where r.lectureId=?");
+		query.setLong(0, reserveInfo.getLectureId());
+		
+		long currentPeople=  (long) query.list().get(0);	
+		/*
+		 * 更新预约人数
+		 */
+		query=sessionFactory.getCurrentSession()
+				.createQuery("update LectureInfo l set l.currentPeople=? where l.id=?");
+		query.setInteger(0, (int) currentPeople);
+		query.setLong(1, reserveInfo.getLectureId());
+		query.executeUpdate();
+		return true;		
+	}
+	
+	/**
+	 * 检查当前人数是否小于最大允许人数
+	 * @param reserveInfo
+	 * @return true currentPeople<maxpeople
+	 * @return false currentPeople>maxpeople
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public boolean checkCurrentPeople(ReserveInfo reserveInfo){
+		Query query=sessionFactory.getCurrentSession()
+				.createQuery("select  currentPeople,maxPeople  from LectureInfo l where l.id=?");
+		query.setLong(0, reserveInfo.getLectureId());	
+		@SuppressWarnings("rawtypes")
+		List list=query.list();
+		//当查询的字段有两个或者两个以上的时候，list里封装的是object[]对象
+		Object[] obj= (Object[]) list.get(0);
+		System.out.println(obj[0]);
+		
+		int currentPeople=(int) obj[0] ;
+		int maxPeople=(int) obj[1];
+		
+		if(currentPeople<maxPeople)
+			return true;
+		else 
+			return false;
+		
 	}
 }
