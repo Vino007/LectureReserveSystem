@@ -11,13 +11,22 @@
 	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
 	<!--namespace用来指定action的url访问路径 -->
 	<package name="action" extends="struts-default">
-		<global-results>
-			<result name="success">/success.jsp</result>
-		</global-results>
+		<interceptors>
+			<interceptor name="loginInterceptor" class="com.vino.lecture.interceptor.LoginInterceptor">
+			</interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+				<interceptor-ref name="logger"></interceptor-ref>
+				<interceptor-ref name="timer"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
 		<!-- class的值与bean的name值对应 -->
 		<action name="LoginAction" class="loginAction">
 			<result name="success">/home.jsp</result>
-			<result name="login">/login.jsp</result>
+			<result name="input">/login.jsp</result>
+			
 			<!-- defaultStack必须要有，要不然会获取不了表单数据 -->
 			<interceptor-ref name="defaultStack"></interceptor-ref>
 			<interceptor-ref name="logger" />
@@ -27,31 +36,68 @@
 		<!-- 预约和取消预约的action采用submit中使用submit方式 -->
 		<action name="LectureAction" class="lectureAction">
 			<result name="success">/lectureManage.jsp</result>
+			<result name="login">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
+		
+		<!-- 讲座管理action -->
+		
 		<!-- 查询所有讲座 -->
 		<action name="QueryLectureAction" class="lectureAction" method="queryAllLecture">
 			<result name="success">/querylecture.jsp</result>
+			<result name="login">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
 		<!-- 查询可预约的讲座 -->
 		<action name="QueryAvailableLectureAction" class="lectureAction"
 			method="queryAvailableLecture">
 			<result name="success">/reserveLecture.jsp</result>
+			<result name="login">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+		<!-- 查询用户已经预约过的讲座 -->
+		<action name="QueryReservedLectureAction" class="lectureAction"
+			method="queryReservedLecture">
+			<result name="success">/querylecture.jsp</result>
+			<result name="login">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
 				
 		<action name="AddLectureAction" class="lectureAction" method="addLecture">
 			<result name="success">/lectureManage.jsp</result>
+			<result name="login">/login.jsp</result>
+			<result name="input">/addLecture.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
 
 		<action name="UpdateLectureAction" class="lectureAction"
 			method="updateLecture">
 			<result name="success">/lectureManage.jsp</result>
+			<result name="login">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
 
 		<action name="DeleteLectureAction" class="lectureAction"
 			method="deleteLecture">
 			<result name="success">/lectureManage.jsp</result>
+			<result name="login">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
-
+		
+		<!-- 用户管理action -->
+		
+		<action name="AddUserAction" class="userAction"
+			method="addUser">
+			<result name="success">/userManage.jsp</result>
+			<result name="input">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+		<action name="UpdateUserAction" class="userAction"
+			method="updateUser">
+			<result name="success">/userManage.jsp</result>
+			<result name="input">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
 
 	</package>
 

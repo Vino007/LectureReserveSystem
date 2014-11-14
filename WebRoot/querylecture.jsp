@@ -8,10 +8,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-	
+	<center>
 		<s:iterator value="lectureInfos" status="status">
 		
-		<table border="2">
+		<table border="2" width="400" >
 		
 		<tr>
 			<td>标题</td>
@@ -34,13 +34,17 @@
 			<td>${maxPeople}</td>
 			</tr>
 			<tr>
+			<td>当前人数</td>
+			<td>${currentPeople}</td>
+			</tr>
+			<tr>
 			<td>讲座介绍</td>
 			<td><s:property value="content"/></td>
 			</tr>					
 			</table>
 			<p><p><p>
 		</s:iterator>
-		
+		</center>
 	
 </body>
 </html>

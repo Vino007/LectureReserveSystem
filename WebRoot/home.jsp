@@ -12,7 +12,7 @@
 <center>
 	<h1>主菜单</h1>
 	<s:a href="lectureManage.jsp" >讲座管理</s:a><br>
-	<s:a href="lectureManage.jsp">发布讲座</s:a><br>
+	<s:a href="userManage.jsp">用户管理</s:a><br>
 </center>
 </body>
 </html>

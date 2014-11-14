@@ -25,12 +25,19 @@
 		<property name="userService" ref="userService"></property>
 		 <property name="user" ref="user"></property> 
 		<property name="lectureService" ref="lectureService"></property>
+		<property name="reserveService" ref="reserveService"></property>
 	</bean>
 	<bean id="loginAction" name="loginAction" class="com.vino.lecture.action.LoginAction"
 		scope="prototype" parent="baseAction">
 		<!-- <property name="userService" ref="userService"></property>
 		 <property name="user" ref="user"></property>  -->
 	</bean>
+	<bean id="userAction" name="userAction" class="com.vino.lecture.action.UserAction"
+		scope="prototype" parent="baseAction">
+		
+	</bean>
+	
+	
 	<bean id="lectureAction" name="lectureAction" class="com.vino.lecture.action.LectureAction"
 		scope="prototype" parent="baseAction">
 		<property name="reserveInfo" ref="reserveInfo"></property>

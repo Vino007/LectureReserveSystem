@@ -12,7 +12,7 @@ public class LoginAction extends BaseAction  {
 	public String execute() throws Exception {
 		
 		user=userService.login(user);
-		System.out.println(user.getName());
+		
 		if(user==null){
 			addActionError("ÓÃ»§ÃûÃÜÂë´íÎó");
 		return LOGIN;

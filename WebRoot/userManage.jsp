@@ -9,12 +9,9 @@
 </head>
 <body>
 <center>
-	<s:a href="QueryLectureAction">全部讲座查询</s:a><br>
-	<s:a href="QueryReservedLectureAction">已预约的讲座查询</s:a><br>
-	<s:a href="addLecture.jsp">讲座新增</s:a><br>
-	<s:a href="deleteLecture.jsp">讲座删除</s:a><br>
-	<s:a href="updateLecture.jsp">讲座修改</s:a><br>
-	<s:a href="QueryAvailableLectureAction">讲座预定</s:a>
+	
+	<s:a href="addUser.jsp">添加用户</s:a><br>
+	<s:a href="updateUser.jsp">更新用户信息</s:a><br>
 	<hr>
 	<hr>
 	<s:if test="#request.Result=='success'">
@@ -28,11 +25,7 @@
 			</script>
 		</s:else>
 	</s:if>
-	<%-- <s:if test="hasActionMessages()">
-	<script type="text/javascript">
-		alert(<s:actionmessage/>);
-	</script>
-	</s:if> --%>
+	
 	<s:actionmessage/>
 	</center>
 </body>

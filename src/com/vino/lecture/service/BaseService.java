@@ -3,9 +3,11 @@ package com.vino.lecture.service;
 import javax.annotation.Resource;
 
 
+
 import org.springframework.stereotype.Service;
 
 import com.vino.lecture.dao.LectureDao;
+import com.vino.lecture.dao.ReserveDao;
 import com.vino.lecture.dao.UserDao;
 
 /**
@@ -19,6 +21,14 @@ public class BaseService {
 	protected UserDao userDao;
 	@Resource
 	protected LectureDao lectureDao;
+	@Resource
+	protected ReserveDao reserveDao;
+	public ReserveDao getReserveDao() {
+		return reserveDao;
+	}
+	public void setReserveDao(ReserveDao reserveDao) {
+		this.reserveDao = reserveDao;
+	}
 	public UserDao getUserDao() {
 		return userDao;
 	}

@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.vino.lecture.domain.LectureInfo;
-import com.vino.lecture.domain.ReserveInfo;
+
+import com.vino.lecture.domain.User;
 @Service
 public class LectureService extends BaseService{
 	/**
@@ -18,14 +19,10 @@ public class LectureService extends BaseService{
 	public List<LectureInfo> queryAvailableLecture(){
 		return lectureDao.queryAvailableLectureInfo();
 	}
-	public boolean updateCurrentPeople(ReserveInfo reserveInfo){
-		lectureDao.updateCurrentPeople(reserveInfo);
-		return true;
+	public List<LectureInfo> queryReservedLecture(User user){
+		return lectureDao.queryReservedLectureInfo(user);
 	}
-	public void checkCurrentPeople(LectureInfo lectureInfo){
 		
-	}
-	
 	public boolean addLecture(LectureInfo lectureInfo){
 		return lectureDao.insertLectureInfo(lectureInfo);
 	}
@@ -35,25 +32,5 @@ public class LectureService extends BaseService{
 	public boolean deleteLecture(long id){
 		return lectureDao.deleteLectureInfoo(id);
 	}
-	/**
-	 * 预定讲座，先判断该用户是否已经预约过了，再进行预约
-	 * @param reserveInfo 预约信息
-	 * @return
-	 */
-	public String reserveLecture(ReserveInfo reserveInfo){
-		if(lectureDao.checkReserveInfo(reserveInfo)){
-		 if(lectureDao.checkCurrentPeople(reserveInfo))
-				return lectureDao.reserveLecture(reserveInfo);
-			else 
-				return "overflow";
-		 }
-		else
-			return "repeat";//重复预约		
-	}
-	public String cancelReserveLecture(ReserveInfo reserveInfo){
-		if(lectureDao.checkReserveInfo(reserveInfo))
-			return "alread_cancel";
-		else
-		return lectureDao.cancelReserveLecture(reserveInfo);
-	}
+	
 }

@@ -35,6 +35,10 @@
 			<td><s:textfield name="lectureInfo.maxPeople"></s:textfield></td>
 		</tr>
 		<tr>
+			<td>是否可预约</td>
+			<td><s:textfield name="lectureInfo.available"></s:textfield></td>
+		</tr>
+		<tr>
 			<td>内容</td>
 			<td><s:textarea name="lectureInfo.content" cols="50" rows="20" ></s:textarea></td>
 			</tr>

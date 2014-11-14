@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+ <!-- 输入校验文件 -->
+ <!-- 利用了struts2自带的校验器 -->
+ <!-- 当一个action需要多个校验逻辑的时候，可以使用ActionName-AliasActionName-validation来命名 -->
+ <validators>
+ 	<field name="lectureInfo.title">
+ 		<field-validator type="requiredstring">
+ 			<param name="trim">true</param>
+ 			<message>必须输入标题</message>
+ 		</field-validator>		
+ 	</field>
+ 	<field name="lectureInfo.lecturer">
+ 		<field-validator type="requiredstring">
+ 			<param name="trim">true</param>			
+ 			<message>必须输入主讲人</message>
+ 		</field-validator>
+ 	</field>
+ 	
+ 	 	<field name="lectureInfo.time">
+ 		<field-validator type="requiredstring">
+ 			<param name="trim">true</param>			
+ 			<message>必须输入时间</message>
+ 		</field-validator>
+ 	</field>
+ 	 	<field name="lectureInfo.address">
+ 		<field-validator type="requiredstring">
+ 			<param name="trim">true</param>			
+ 			<message>必须输入地点</message>
+ 		</field-validator>
+ 	</field> 	
+ 	<field name="lectureInfo.maxPeople">
+ 		<field-validator type="int">
+ 			<param name="min">1</param>
+ 			<param name="max">500</param>		
+ 			<message>最大允许人数必须介于1-500之间</message>
+ 		</field-validator>
+ 		<field-validator type="required">
+ 			<message>必须输入最大允许人数</message>
+ 		</field-validator>
+ 	</field>
+ 	<field name="lectureInfo.content">
+ 		<field-validator type="requiredstring">
+ 			<param name="trim">true</param>			
+ 			<message>必须输入内容</message>
+ 		</field-validator>
+ 	</field>
+ </validators>

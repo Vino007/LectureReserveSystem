@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE validators PUBLIC
+  		"-//Apache Struts//XWork Validator 1.0.3//EN"
+  		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+ <!-- 输入校验文件 -->
+ <!-- 利用了struts2自带的校验器 -->
+ <!-- 当一个action需要多个校验逻辑的时候，可以使用ActionName-AliasActionName-validation来命名 -->
+ <validators>
+ 	<field name="user.username">
+ 		<field-validator type="requiredstring">
+ 			<param name="trim">true</param>
+ 			<message>必须输入用户名</message>
+ 		</field-validator>
+ 		
+ 		
+ 	</field>
+ 	<field name="user.password">
+ 		<field-validator type="requiredstring">
+ 			<param name="trim">true</param>			
+ 			<message>必须输入密码</message>
+ 		</field-validator>
+ 	</field>
+ </validators>

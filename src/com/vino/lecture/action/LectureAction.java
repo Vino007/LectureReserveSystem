@@ -70,6 +70,16 @@ public class LectureAction extends BaseAction {
 		lectureInfos = lectureService.queryAvailableLecture();
 		return SUCCESS;
 	}
+	/**
+	 * 查询已经预约的讲座
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public String queryReservedLecture() throws Exception {
+		lectureInfos = lectureService.queryReservedLecture(user);
+		return SUCCESS;
+	}
 
 	/**
 	 * 添加讲座
@@ -126,25 +136,29 @@ public class LectureAction extends BaseAction {
 	 */
 	public String reserveLecture() throws Exception {
 		System.out.println("reserveLecture执行");
-		lectureService.updateCurrentPeople(reserveInfo);
-		if (lectureService.reserveLecture(reserveInfo).equals("success"))
+		
+		if (reserveService.reserveLecture(reserveInfo).equals("success")){
 			addActionMessage("预约成功");
-		else if (lectureService.reserveLecture(reserveInfo).equals("fail"))
+			reserveService.updateCurrentPeople(reserveInfo);//更新现有人数
+		}
+		else if (reserveService.reserveLecture(reserveInfo).equals("fail"))
 			addActionMessage("预约失败");
-		else if (lectureService.reserveLecture(reserveInfo).equals("repeat"))
+		else if (reserveService.reserveLecture(reserveInfo).equals("repeat"))
 			addActionMessage("已经预约过了");
-		else if (lectureService.reserveLecture(reserveInfo).equals("overflow"))
+		else if (reserveService.reserveLecture(reserveInfo).equals("overflow"))
 			addActionMessage("预约人数已满");
 		return SUCCESS;
 	}
 
 	public String cancelReserveLecture() throws Exception {
 		System.out.println("cancelreserveLecture执行");
-		if (lectureService.cancelReserveLecture(reserveInfo).equals("success"))
+		if (reserveService.cancelReserveLecture(reserveInfo).equals("success")){
 			addActionMessage("取消预约成功");
-		else if(lectureService.cancelReserveLecture(reserveInfo).equals("fail"))
+			reserveService.updateCurrentPeople(reserveInfo);//更新现有人数
+		}
+		else if(reserveService.cancelReserveLecture(reserveInfo).equals("fail"))
 			addActionMessage("取消预约失败");
-		else if(lectureService.cancelReserveLecture(reserveInfo).equals("alread_cancel"))
+		else if(reserveService.cancelReserveLecture(reserveInfo).equals("alread_cancel"))
 			addActionMessage("已经取消了");
 		return SUCCESS;
 	}
