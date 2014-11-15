@@ -2,6 +2,7 @@ package com.vino.lecture.action;
 
 import java.util.List;
 import java.util.Map;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.vino.lecture.domain.LectureInfo;
 import com.vino.lecture.domain.ReserveInfo;
@@ -91,10 +92,13 @@ public class LectureAction extends BaseAction {
 	public String addLecture() throws Exception {
 
 		Map request = (Map) ActionContext.getContext().get("request");
-		if (lectureService.addLecture(lectureInfo)) {
+		
+		try{
+			lectureService.addLecture(lectureInfo);
 			request.put("Result", "success");
-		} else
+		}catch(RuntimeException e){
 			request.put("Result", "fail");
+		}		
 		return SUCCESS;
 	}
 
@@ -107,10 +111,12 @@ public class LectureAction extends BaseAction {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String updateLecture() throws Exception {
 		Map request = (Map) ActionContext.getContext().get("request");
-		if (lectureService.updateLecture(lectureInfo, id)) {
+		try{
+			lectureService.updateLecture(lectureInfo,id);
 			request.put("Result", "success");
-		} else
+		}catch(RuntimeException e){
 			request.put("Result", "fail");
+		}		
 		return SUCCESS;
 	}
 
@@ -120,12 +126,17 @@ public class LectureAction extends BaseAction {
 	 * @return 返回主界面
 	 * @throws Exception
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String deleteLecture() throws Exception {
-		if (lectureService.deleteLecture(id))
-			addActionMessage("success");
-		else
-			addActionMessage("fail");
+		Map request = (Map) ActionContext.getContext().get("request");
+		try{
+			lectureService.deleteLecture(id);
+			request.put("Result", "success");
+		}catch(RuntimeException e){
+			request.put("Result", "fail");
+		}		
 		return SUCCESS;
+		
 	}
 
 	/**
@@ -135,31 +146,34 @@ public class LectureAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String reserveLecture() throws Exception {
-		System.out.println("reserveLecture执行");
-		
-		if (reserveService.reserveLecture(reserveInfo).equals("success")){
-			addActionMessage("预约成功");
-			reserveService.updateCurrentPeople(reserveInfo);//更新现有人数
-		}
-		else if (reserveService.reserveLecture(reserveInfo).equals("fail"))
-			addActionMessage("预约失败");
-		else if (reserveService.reserveLecture(reserveInfo).equals("repeat"))
-			addActionMessage("已经预约过了");
-		else if (reserveService.reserveLecture(reserveInfo).equals("overflow"))
-			addActionMessage("预约人数已满");
+		System.out.println("reserveLecture执行");	
+		try{
+			if (reserveService.reserveLecture(reserveInfo).equals("success")){
+				addActionMessage("预约成功");
+				reserveService.updateCurrentPeople(reserveInfo);//更新现有人数
+			}			
+			else if (reserveService.reserveLecture(reserveInfo).equals("repeat"))
+				addActionMessage("已经预约过了");
+			else if (reserveService.reserveLecture(reserveInfo).equals("overflow"))
+				addActionMessage("预约人数已满");
+		}catch(RuntimeException e){
+			    addActionMessage("预约失败");
+		}		
 		return SUCCESS;
 	}
 
 	public String cancelReserveLecture() throws Exception {
 		System.out.println("cancelreserveLecture执行");
+		try{
 		if (reserveService.cancelReserveLecture(reserveInfo).equals("success")){
 			addActionMessage("取消预约成功");
 			reserveService.updateCurrentPeople(reserveInfo);//更新现有人数
-		}
-		else if(reserveService.cancelReserveLecture(reserveInfo).equals("fail"))
-			addActionMessage("取消预约失败");
+		}		
 		else if(reserveService.cancelReserveLecture(reserveInfo).equals("alread_cancel"))
 			addActionMessage("已经取消了");
+		}catch(RuntimeException e){
+			addActionMessage("取消预约失败");
+		}
 		return SUCCESS;
 	}
 

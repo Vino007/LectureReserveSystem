@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.vino.lecture.domain.User;
 @Repository
-public class UserDao extends BaseDao {	
+public class UserDao extends CommonDaoImpl<User> {	
 	
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
 	public User checkUser(User user){

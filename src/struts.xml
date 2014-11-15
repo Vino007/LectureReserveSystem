@@ -98,6 +98,18 @@
 			<result name="input">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
+		<action name="DeleteUserAction" class="userAction"
+			method="deleteUser">
+			<result name="success">/userManage.jsp</result>
+			<result name="input">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+		<action name="QueryAllUserAction" class="userAction"
+			method="queryAllUser">
+			<result name="success">/queryUser.jsp</result>
+			<result name="input">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
 
 	</package>
 
