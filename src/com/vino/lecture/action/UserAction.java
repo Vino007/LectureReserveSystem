@@ -3,6 +3,7 @@ package com.vino.lecture.action;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.vino.lecture.domain.PageBean;
 import com.vino.lecture.domain.User;
 
 public class UserAction extends BaseAction {
@@ -13,6 +14,15 @@ public class UserAction extends BaseAction {
 	private static final long serialVersionUID = 1L;
 	private long id;// 输入用户的id,在删除讲座方法中使用
 	private List<User> users;
+	private PageBean<User> pageBean;
+	public PageBean<User> getPageBean() {
+		return pageBean;
+	}
+
+	public void setPageBean(PageBean<User> pageBean) {
+		this.pageBean = pageBean;
+	}
+
 	public List<User> getUsers() {
 		return users;
 	}
@@ -31,8 +41,10 @@ public class UserAction extends BaseAction {
 
 	public String addUser() throws Exception {
 		try {
-			userService.addUser(user);
+			if(userService.addUser(user).equals("success"))
 			addActionMessage("添加用户成功");
+			else if(userService.addUser(user).equals("repeat"))
+				addActionMessage("用户名重复");
 		} catch (RuntimeException e) {
 			addActionMessage("添加用户失败");
 		}
@@ -76,5 +88,12 @@ public class UserAction extends BaseAction {
 		
 		return SUCCESS;
 	}
+	public String pageQueryUser() throws Exception {
+		int pageRecord=pageBean.getPageRecord();
+		int pageNo=pageBean.getPageNo();
+		pageBean=userService.pageQueryUser(pageNo, pageRecord);					
+		
+	return SUCCESS;
+}
 
 }

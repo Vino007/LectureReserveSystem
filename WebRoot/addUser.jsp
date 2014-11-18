@@ -9,10 +9,11 @@
 </head>
 <body>
 	<s:form action="AddUserAction" method="post" >
-	<s:textfield name="user.username" label="用户名"></s:textfield>
-	<s:password	name="user.password" label="密码"></s:password>
-	<s:textfield name="user.name" label="真实姓名"></s:textfield>
+	<s:textfield name="user.username" label="用户名" placeholder="请输入用户名..." ></s:textfield>
+	<s:password	name="user.password" label="密码" placeholder="请输入密码..."></s:password>
+	<s:textfield name="user.name" label="真实姓名" placeholder="请输入姓名..."></s:textfield>
 	<s:submit value="提交"></s:submit>
 	</s:form>
+
 </body>
 </html>

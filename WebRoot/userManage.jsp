@@ -13,7 +13,7 @@
 	<s:a href="addUser.jsp">添加用户</s:a><br>
 	<s:a href="updateUser.jsp">更新用户信息</s:a><br>
 	<s:a href="deleteUser.jsp">删除用户</s:a><br>
-	<s:a href="QueryAllUserAction">查询全部用户</s:a><br>
+	<s:a href="PageQueryUserAction">查询全部用户</s:a><br>
 	<hr>
 	<hr>
 	<s:if test="#request.Result=='success'">

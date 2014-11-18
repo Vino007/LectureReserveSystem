@@ -39,19 +39,19 @@
 		<!-- %得用在struts标签中，$是el表达式 -->
 		第${pageBean.pageNo}页/共${pageBean.totalPage}页 
 		<s:a
-			href="QueryAllLectureAction?pageBean.pageNo=1">首页</s:a>
+			href="QueryReservedLectureAction?pageBean.pageNo=1">首页</s:a>
 		<s:if test="pageBean.pageNo > 1 ">
 		
 			<s:a
-				href="QueryAllLectureAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a>
+				href="QueryReservedLectureAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a>
 		</s:if>
 
 		<s:if test="pageBean.pageNo < pageBean.totalPage ">
 			<s:a
-				href="QueryAllLectureAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a>
+				href="QueryReservedLectureAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a>
 		</s:if>
 		<s:a
-			href="QueryAllLectureAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
+			href="QueryReservedLectureAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
 		
 	</center>
 	

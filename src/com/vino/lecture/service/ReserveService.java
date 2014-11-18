@@ -23,7 +23,7 @@ public class ReserveService extends BaseService {
 		hql = "update LectureInfo l set l.currentPeople=? where l.id=?";
 		condition.add((int) currentPeople);
 		condition.add(reserveInfo.getLectureId());
-		reserveDao.update(hql, condition);
+		reserveDao.updateWithCondition(hql, condition);
 		condition.clear();
 	}
 
@@ -38,8 +38,8 @@ public class ReserveService extends BaseService {
 	public String reserveLecture(ReserveInfo reserveInfo)
 			throws RuntimeException {
 		try {
-			if (checkReserveInfo(reserveInfo)) {
-				if (checkCurrentPeople(reserveInfo)) {
+			if (!isAlreadyReserve(reserveInfo)) {
+				if (isCurrentPeopleSmallerThanMaxPeople(reserveInfo)) {
 					reserveDao.add(reserveInfo);
 					return "success";
 				} else
@@ -60,7 +60,7 @@ public class ReserveService extends BaseService {
 	public String cancelReserveLecture(ReserveInfo reserveInfo)
 			throws RuntimeException {
 		try {
-			if (checkReserveInfo(reserveInfo))
+			if (!isAlreadyReserve(reserveInfo))
 				return "alread_cancel";
 			else {
 
@@ -82,9 +82,9 @@ public class ReserveService extends BaseService {
 	 * 检查当前用户是否预约过改讲座
 	 * 
 	 * @param reserveInfo
-	 * @return true 没有
+	 * @return true 已经预约过  false 未预约
 	 */
-	public boolean checkReserveInfo(ReserveInfo reserveInfo) {
+	public boolean isAlreadyReserve(ReserveInfo reserveInfo) {
 
 		String hql = "from ReserveInfo r where r.username=? and r.lectureId=?";
 		condition.clear();
@@ -93,19 +93,19 @@ public class ReserveService extends BaseService {
 		Object obj = reserveDao.query(hql, condition);
 		condition.clear();
 		if (obj == null)
-			return true;
-		else
 			return false;
+		else
+			return true;
 	}
 
 	/**
-	 * 检查当前的人数是否大于最大容纳人数
+	 * 检查当前的人数是否小于最大容纳人数
 	 * 
 	 * @param reserveInfo
 	 * @return true 可以进行预约 false 不可以进行预约
 	 * 
 	 */
-	public boolean checkCurrentPeople(ReserveInfo reserveInfo) {
+	public boolean isCurrentPeopleSmallerThanMaxPeople(ReserveInfo reserveInfo) {
 		String hql = "select  currentPeople,maxPeople  from LectureInfo l where l.id=?";
 		condition.clear();
 		condition.add(reserveInfo.getLectureId());

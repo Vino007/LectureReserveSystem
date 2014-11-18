@@ -16,6 +16,7 @@
 			</interceptor>
 			<interceptor-stack name="myStack">
 				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<!-- 防止用户未登录进入后台 -->
 				<interceptor-ref name="loginInterceptor"></interceptor-ref>
 				<interceptor-ref name="logger"></interceptor-ref>
 				<interceptor-ref name="timer"></interceptor-ref>
@@ -43,7 +44,7 @@
 		<!-- 讲座管理action -->
 		
 		<!-- 查询所有讲座 -->
-		<action name="QueryLectureAction" class="lectureAction" method="queryAllLecture">
+		<action name="QueryAllLectureAction" class="lectureAction" method="queryAllLecture">
 			<result name="success">/querylecture.jsp</result>
 			<result name="login">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
@@ -58,7 +59,7 @@
 		<!-- 查询用户已经预约过的讲座 -->
 		<action name="QueryReservedLectureAction" class="lectureAction"
 			method="queryReservedLecture">
-			<result name="success">/querylecture.jsp</result>
+			<result name="success">/queryReservedLecture.jsp</result>
 			<result name="login">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
@@ -106,6 +107,12 @@
 		</action>
 		<action name="QueryAllUserAction" class="userAction"
 			method="queryAllUser">
+			<result name="success">/queryUser.jsp</result>
+			<result name="input">/login.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+			<action name="PageQueryUserAction" class="userAction"
+			method="pageQueryUser">
 			<result name="success">/queryUser.jsp</result>
 			<result name="input">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>

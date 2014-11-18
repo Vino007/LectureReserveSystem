@@ -9,7 +9,7 @@
 </head>
 <body>
 <center>
-	<s:a href="QueryLectureAction">全部讲座查询</s:a><br>
+	<s:a href="QueryAllLectureAction">全部讲座查询</s:a><br>
 	<s:a href="QueryReservedLectureAction">已预约的讲座查询</s:a><br>
 	<s:a href="addLecture.jsp">讲座新增</s:a><br>
 	<s:a href="deleteLecture.jsp">讲座删除</s:a><br>

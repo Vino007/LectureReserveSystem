@@ -34,6 +34,7 @@
 	</bean>
 	<bean id="userAction" name="userAction" class="com.vino.lecture.action.UserAction"
 		scope="prototype" parent="baseAction">
+		<property name="pageBean" ref="pageBean"></property>
 		
 	</bean>
 	
@@ -41,6 +42,7 @@
 	<bean id="lectureAction" name="lectureAction" class="com.vino.lecture.action.LectureAction"
 		scope="prototype" parent="baseAction">
 		<property name="reserveInfo" ref="reserveInfo"></property>
+		<property name="pageBean" ref="pageBean"></property>
 		</bean>
 	
 	<!-- =============================================================================== -->

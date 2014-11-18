@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.vino.lecture.domain.LectureInfo;
+import com.vino.lecture.domain.PageBean;
 import com.vino.lecture.domain.ReserveInfo;
 
 public class LectureAction extends BaseAction {
@@ -16,6 +17,18 @@ public class LectureAction extends BaseAction {
 	private List<LectureInfo> lectureInfos;// 讲座信息列表
 	private LectureInfo lectureInfo;
 	private ReserveInfo reserveInfo;// 注入，预定信息
+	@SuppressWarnings("rawtypes")
+	private PageBean pageBean;
+	@SuppressWarnings("rawtypes")
+	public PageBean getPageBean() {
+		return pageBean;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
+
 	private long id;// 输入讲座的id,在删除讲座方法中使用
 
 	public ReserveInfo getReserveInfo() {
@@ -56,8 +69,9 @@ public class LectureAction extends BaseAction {
 	 * @return
 	 * @throws Exception
 	 */
+
 	public String queryAllLecture() throws Exception {
-		lectureInfos = lectureService.queryAllLecture();
+		 pageBean=lectureService.pageQuery(pageBean.getPageNo(),pageBean.getPageRecord());
 		return SUCCESS;
 	}
 
@@ -68,7 +82,8 @@ public class LectureAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String queryAvailableLecture() throws Exception {
-		lectureInfos = lectureService.queryAvailableLecture();
+		//lectureInfos = lectureService.queryAvailableLecture();
+		pageBean=lectureService.pageQueryAvailable(pageBean.getPageNo(), pageBean.getPageRecord());
 		return SUCCESS;
 	}
 	/**
@@ -78,7 +93,10 @@ public class LectureAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String queryReservedLecture() throws Exception {
-		lectureInfos = lectureService.queryReservedLecture(user);
+		
+		//lectureInfos = lectureService.queryReservedLecture(user);
+		
+		pageBean=lectureService.pageQueryReserved(pageBean.getPageNo(), pageBean.getPageRecord(),user);
 		return SUCCESS;
 	}
 

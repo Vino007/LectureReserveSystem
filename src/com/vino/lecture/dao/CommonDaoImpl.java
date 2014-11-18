@@ -3,8 +3,11 @@ package com.vino.lecture.dao;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.vino.lecture.domain.PageBean;
 
 public class CommonDaoImpl<T> extends BaseDao implements CommonDao<T> {
 	public CommonDaoImpl() {
@@ -46,13 +49,46 @@ public class CommonDaoImpl<T> extends BaseDao implements CommonDao<T> {
 				new Long(id));
 		sessionFactory.getCurrentSession().delete(bean);
 	}
-
-	public void update(String hql, List<Object> condition) {
+	/**
+	 * 条件更新
+	 */
+	public void updateWithCondition(String hql, List<Object> condition) {
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		if (condition != null && condition.size() > 0) {
 			for (int index = 0; index < condition.size(); index++)
 				query.setParameter(index, condition.get(index));
 		}
+		query.executeUpdate();
+
+	}
+	/**
+	 * 定时器使用的更新操作，不能使用spring的事务管理，spring管理的currentSession的事务！
+	 * 手动管理事务
+	 * getCurrentSession 创建的session会和绑定到当前线程,而openSession不会 
+	 * session手动开启和关闭
+	 * @param hql
+	 * @param condition
+	 */
+	public void updateTimer(String hql, List<Object> condition) {
+		Session session=sessionFactory.openSession();
+		Query query = session.createQuery(hql);
+		if (condition != null && condition.size() > 0) {
+			for (int index = 0; index < condition.size(); index++)
+				query.setParameter(index, condition.get(index));
+		}
+		session.beginTransaction();
+		query.executeUpdate();
+		session.getTransaction().commit();
+		session.close();
+
+	}
+	/**
+	 * 无条件更新
+	 * @param hql
+	 */
+	public void update(String hql){
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		
 		query.executeUpdate();
 
 	}
@@ -69,7 +105,7 @@ public class CommonDaoImpl<T> extends BaseDao implements CommonDao<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public List<T> queryList(String hql, List<Object> condition) {
+	public List<T> queryWithCondition(String hql, List<Object> condition) {
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		if (condition != null && condition.size() > 0) {
 			for (int index = 0; index < condition.size(); index++)
@@ -81,7 +117,7 @@ public class CommonDaoImpl<T> extends BaseDao implements CommonDao<T> {
 	}
 
 	/**
-	 * 只能返回单个结果的查询
+	 * 只能返回单个结果的条件查询
 	 * 
 	 * @param hql
 	 * @param condition
@@ -100,15 +136,80 @@ public class CommonDaoImpl<T> extends BaseDao implements CommonDao<T> {
 	}
 
 	/**
-	 * 无条件查询全部结果
+	 * 无条件查询(不带？的hql)
 	 * 
-	 * @param hql
+	 * @param hql 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<T> queryAll(String hql) {
+	public List<T> query(String hql) {
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
 
+	}
+	@SuppressWarnings("unchecked")
+	/**
+	 * 无条件分页查询
+	 * 业务逻辑：
+	 * 1.查询目标表的总记录数，设置总记录数
+	 * 2.按每次记录数查询数据库，设置beanList
+	 * @param pageNo 当前页码
+	 * @param pageRecord 每页记录数
+	 * @param beanName 要查询的Bean的类名
+	 * @return pageBean
+	 */
+	public PageBean<T> queryPage(int pageNo,int pageRecord,String beanName){
+		PageBean<T> pageBean=new PageBean<T>();
+		pageBean.setPageNo(pageNo);
+		pageBean.setPageRecord(pageRecord);
+		String hql="select count(*) from "+ beanName;	
+		Query query=sessionFactory.getCurrentSession().createQuery(hql);
+		long totalRecord=(long) query.uniqueResult();
+		pageBean.setTotalRecord((int) totalRecord);
+		hql="from "+beanName;
+		query=sessionFactory.getCurrentSession().createQuery(hql);
+		query.setFirstResult((pageNo-1)*pageRecord);//设置起始点
+		query.setMaxResults(pageRecord);//设置一次返回的最大结果数
+		pageBean.setBeanList(query.list()); 	
+		return pageBean;		
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	/**
+	 * 条件分页查询
+	 * @param pageNo 当前页码
+	 * @param pageRecord 每页记录数 
+	 * @param condition 查询的条件
+	 * @param hql_count 求总记录数的hql
+	 * @param hql_list  查询记录的hql
+	 * @return
+	 */
+	public PageBean<T> queryPageWithCondition(int pageNo,int pageRecord,
+			List<Object> condition,String hql_count,String hql_list){
+		PageBean<T> pageBean=new PageBean<T>();
+		pageBean.setPageNo(pageNo);
+		pageBean.setPageRecord(pageRecord);
+		
+		Query query=sessionFactory.getCurrentSession().createQuery(hql_count);
+		if (condition != null && condition.size() > 0) {
+			for (int index = 0; index < condition.size(); index++)
+				query.setParameter(index, condition.get(index));
+		}
+
+		long totalRecord=(long) query.uniqueResult();
+		pageBean.setTotalRecord((int) totalRecord);	
+		query=sessionFactory.getCurrentSession().createQuery(hql_list);	
+		if (condition != null && condition.size() > 0) {
+			for (int index = 0; index < condition.size(); index++)
+				query.setParameter(index, condition.get(index));
+		}
+		query.setFirstResult((pageNo-1)*pageRecord);
+		query.setMaxResults(pageRecord);
+		pageBean.setBeanList(query.list()); 	
+		return pageBean;
+		
+		
 	}
 }
