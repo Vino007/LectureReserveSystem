@@ -1,22 +1,156 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bootstrap的HTML标准模板</title>
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<!--你自己的样式文件 -->
+<link href="css/your-style.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/dashBoard.css">
+<!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
+<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
 </head>
 <body>
-<center>
-	<s:a href="QueryAllLectureAction">全部讲座查询</s:a><br>
+	<!-- 导航条 -->
+	<nav class="navbar navbar-default navbar-inverse  navbar-fixed-top "
+		role="navigation">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">讲座预约系统</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse"
+				id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Link</a></li>
+					<li><a href="#">Link</a></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#">Action</a></li>
+							<li><a href="#">Another action</a></li>
+							<li><a href="#">Something else here</a></li>
+							<li class="divider"></li>
+							<li><a href="#">Separated link</a></li>
+							<li class="divider"></li>
+							<li><a href="#">One more separated link</a></li>
+						</ul></li>
+				</ul>
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Search">
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">Link</a></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#">Action</a></li>
+							<li><a href="#">Another action</a></li>
+							<li><a href="#">Something else here</a></li>
+							<li class="divider"></li>
+							<li><a href="#">Separated link</a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+
+	<!-- 侧边栏 -->
+
+	<!-- 加上这句整齐！ -->
+	<div class="container-fluid">
+
+		<div class="row">
+			<div class="col-md-2 sidebar">
+				<ul class="nav nav-sidebar" role="tablist">
+					<%-- <li class="active"><a href="#">Overview <span
+							class="sr-only">(current)</span></a></li> --%>
+					<li><s:a href="#div0" role="tab" data-toggle="tab" id="a_reserve">预约讲座</s:a></li>
+					<li><s:a href="#div1" role="tab" data-toggle="tab" id="a_queryAll">历史讲座查询</s:a></li>
+					<li><s:a href="#div2" role="tab" data-toggle="tab" id="a_queryReserved">已约讲座查询</s:a></li>
+				</ul>
+				<ul class="nav nav-sidebar">
+					<li><a href="">用户信息</a></li>
+					<li><a href="">Nav item again</a></li>
+					<li><a href="">One more nav</a></li>
+					<li><a href="">Another nav item</a></li>
+					<li><a href="">More navigation</a></li>
+				</ul>
+				<ul class="nav nav-sidebar">
+					<li><a href="">Nav item again</a></li>
+					<li><a href="">One more nav</a></li>
+					<li><a href="">Another nav item</a></li>
+				</ul>
+			</div>
+			<!--tab的内容  -->
+			
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div class="tab-content">
+					<div class="tab-pane active" id="div0"></div>
+					<div class="tab-pane" id="div1"></div>
+					<div class="tab-pane" id="div2">div2</div>
+				</div>
+			</div>
+		</div>
+		</div>
+
+		<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+		<script src="js/jquery-2.1.1.js"></script>
+		<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+		<script src="js/bootstrap.min.js"></script>
+		<!-- 异步载入页面 -->
+		<script>
+			$(document).ready(function(){
+					$("#a_reserve").click(function() {
+						$("#div0").load("QueryAvailableLectureAction");
+					});
+			});	
+			$(document).ready(function(){
+				$("#a_queryAll").click(function() {
+					$("#div1").load("QueryAllLectureAction");
+				});
+		});	
+			$(document).ready(function(){
+				$("#a_queryReserved").click(function() {
+					$("#div2").load("QueryReservedLectureAction");
+				});
+		});	
+						
+			</script>
+		<%-- <s:a href="QueryAllLectureAction">全部讲座查询</s:a><br>
 	<s:a href="QueryReservedLectureAction">已预约的讲座查询</s:a><br>
 	<s:a href="addLecture.jsp">讲座新增</s:a><br>
 	<s:a href="deleteLecture.jsp">讲座删除</s:a><br>
 	<s:a href="updateLecture.jsp">讲座修改</s:a><br>
 	<s:a href="QueryAvailableLectureAction">讲座预定</s:a>
 	<hr>
-	<hr>
+	<hr> 
 	<s:if test="#request.Result=='success'">
 		
 			<script type="text/javascript">
@@ -28,12 +162,11 @@
 			</script>
 		</s:else>
 	</s:if>
-	<%-- <s:if test="hasActionMessages()">
+	<s:if test="hasActionMessages()">
 	<script type="text/javascript">
 		alert(<s:actionmessage/>);
 	</script>
-	</s:if> --%>
-	<s:actionmessage/>
-	</center>
+	</s:if>
+	<s:actionmessage/> --%>
 </body>
 </html>

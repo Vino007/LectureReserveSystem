@@ -27,6 +27,7 @@
 		<action name="LoginAction" class="loginAction">
 			<result name="success">/home.jsp</result>
 			<result name="input">/login.jsp</result>
+			<result name="login">/login.jsp</result>
 			
 			<!-- defaultStack必须要有，要不然会获取不了表单数据 -->
 			<interceptor-ref name="defaultStack"></interceptor-ref>
@@ -36,7 +37,7 @@
 		
 		<!-- 预约和取消预约的action采用submit中使用submit方式 -->
 		<action name="LectureAction" class="lectureAction">
-			<result name="success">/lectureManage.jsp</result>
+			<result name="success">/reserveLecture.jsp</result>
 			<result name="login">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>

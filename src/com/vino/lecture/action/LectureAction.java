@@ -165,22 +165,28 @@ public class LectureAction extends BaseAction {
 	 */
 	public String reserveLecture() throws Exception {
 		System.out.println("reserveLecture执行");	
+		Map request = (Map) ActionContext.getContext().get("request");
 		try{
 			if (reserveService.reserveLecture(reserveInfo).equals("success")){
 				addActionMessage("预约成功");
+				request.put("Result", "success");
 				reserveService.updateCurrentPeople(reserveInfo);//更新现有人数
 			}			
-			else if (reserveService.reserveLecture(reserveInfo).equals("repeat"))
+			else if (reserveService.reserveLecture(reserveInfo).equals("repeat")){
 				addActionMessage("已经预约过了");
-			else if (reserveService.reserveLecture(reserveInfo).equals("overflow"))
-				addActionMessage("预约人数已满");
+			request.put("Result", "repeat");}
+			else if (reserveService.reserveLecture(reserveInfo).equals("overflow")){
+				addActionMessage("overflow");
+			request.put("Result", "fail");}
 		}catch(RuntimeException e){
 			    addActionMessage("预约失败");
+			    request.put("Result", "fail");
 		}		
 		return SUCCESS;
 	}
 
 	public String cancelReserveLecture() throws Exception {
+		Map request = (Map) ActionContext.getContext().get("request");
 		System.out.println("cancelreserveLecture执行");
 		try{
 		if (reserveService.cancelReserveLecture(reserveInfo).equals("success")){

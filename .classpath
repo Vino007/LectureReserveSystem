@@ -48,6 +48,7 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/struts2-core-2.3.16.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/struts2-spring-plugin-2.3.16.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xwork-core-2.3.16.3.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/struts2-dojo-plugin-2.3.16.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
