@@ -8,11 +8,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bootstrap的HTML标准模板</title>
+<title>讲座预约系统</title>
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<!--你自己的样式文件 -->
-<link href="css/your-style.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/dashBoard.css">
 <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
 <!--[if lt IE 9]>
@@ -104,7 +102,7 @@ body {
 		<div class="row">
 			<div class="col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
-					<li><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+					<%-- 	<li><a href="#">Overview <span class="sr-only">(current)</span></a></li> --%>
 					<li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
 					<li><s:a href="QueryAllLectureAction">查询历史讲座</s:a></li>
 					<li class="active"><s:a href="QueryReservedLectureAction">已约讲座查询</s:a></li>
@@ -122,8 +120,13 @@ body {
 					<li><a href=""></a></li>
 				</ul>
 			</div>
+	
+	
+			
+	<!-- 表格部分 -->		
+			
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<table class="table table-bordered table-hover center "
+				<table id="table" class="table table-bordered table-hover center "
 					contenteditable="false">
 					<thead>
 						<tr class="success">
@@ -131,11 +134,11 @@ body {
 							<th>主讲人</th>
 							<th>时间</th>
 							<th>地点</th>
-					
+
 						</tr>
 					</thead>
 					<tbody>
-						<s:iterator value="pageBean.beanList" status="status">
+						<s:iterator value="pageBean.beanList" status="status" >
 							<tr>
 								<td>${title}</td>
 								<td>${lecturer}</td>
@@ -145,35 +148,28 @@ body {
 						</s:iterator>
 					</tbody>
 
-				</table>
+				</table>				
 				<!-- 分页 -->
 				<nav>
 					<ul class="pagination center">
 						<!-- <li><a href="#">&laquo;</a></li> -->
-						<li><s:a href="QueryReservedLectureAction?pageBean.pageNo=1">首页</s:a></li>
-						<s:if test="pageBean.pageNo > 1 ">
-							<li><s:a
-									href="QueryReservedLectureAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
-						</s:if>
-						<s:else>
-							<li><s:a href="#">上一页</s:a></li>
-						</s:else>
-						<s:if test="pageBean.pageNo <pageBean.totalPage">
-							<li><s:a
-									href="QueryReservedLectureAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
-						</s:if>
-						<s:else>
-							<li><s:a href="#">下一页</s:a></li>
-						</s:else>
-						<li><s:a
-								href="QueryReservedLectureAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
+						<%-- <li><s:a href="QueryReservedLectureAction?pageBean.pageNo=1">首页</s:a></li> --%>
+						
+						<li id="firstPage"><s:a href="#">首页</s:a></li>
+					
+							<li id="prePage"><s:a
+									href="#">上一页</s:a></li>					
+							<li id="nextPage"><s:a
+									href="#">下一页</s:a></li>						
+						<li id="lastPage"><s:a
+								href="#">尾页</s:a>
 						</li>
 						<!-- 
 						<li><a href="#">&raquo;</a></li> -->
 					</ul>
 				</nav>
-				<p class="text-center">第${pageBean.pageNo}页/共${pageBean.totalPage}页</p>
-
+				<p class="text-center">第<span id="pageNo">${pageBean.pageNo}</span>页/共<span id="totalPage">${pageBean.totalPage}</span>页</p>
+				
 			</div>
 
 		</div>
@@ -183,6 +179,63 @@ body {
 	<script src="js/jquery-2.1.1.js"></script>
 	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
 	<script src="js/bootstrap.min.js"></script>
+	<script src="js/myajax.js"></script>
+	<script>
+		//首页
+		$(document).ready(function() {
+			$("#firstPage").click(function() {
+				$.get("ajax/AjaxQueryReservedLecture", {
+					"pageBean.pageNo" : "1"
+				}, function(data, status) {
+					queryReservedCallback(data, status);
+				});
+			});
+		});
+
+		//上一页 Number()将字符串转型成整型
+		$(document).ready(function() {
+			$("#prePage").click(function() {
+				if (Number($("#pageNo").text()) > 1)
+					var nextPage = Number($("#pageNo").text()) - 1;
+				else
+					var nextPage = 1;
+				$.get("ajax/AjaxQueryReservedLecture", {
+					"pageBean.pageNo" : nextPage
+				}, function(data, status) {
+					queryReservedCallback(data, status);
+
+				});
+			});
+		});
+
+		//下一页 Number()将字符串转型成整型
+	
+		$(document).ready(function() {
+			$("#nextPage").click(function() {
+				if (Number($("#pageNo").text()) < Number($("#totalPage").text()))
+					var nextPage = Number($("#pageNo").text()) + 1;//加页
+				else
+					var nextPage = Number($("#pageNo").text());//保持不变
+				$.get("ajax/AjaxQueryReservedLecture",{
+					"pageBean.pageNo" : nextPage
+					},function(data,status) {
+					queryReservedCallback(data,status);
+					});
+				});
+		 });
+
+		//尾页
+		$(document).ready(function() {
+			$("#lastPage").click(function() {
+				$.get("ajax/AjaxQueryReservedLecture", {
+					"pageBean.pageNo" : $("#totalPage").text()
+				}, function(data, status) {
+					queryReservedCallback(data, status);
+
+				});
+			});
+		});
+	</script>
 
 </body>
 </html>

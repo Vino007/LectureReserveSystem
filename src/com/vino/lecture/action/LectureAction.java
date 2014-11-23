@@ -1,5 +1,6 @@
 package com.vino.lecture.action;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,27 @@ public class LectureAction extends BaseAction {
 	private List<LectureInfo> lectureInfos;// 讲座信息列表
 	private LectureInfo lectureInfo;
 	private ReserveInfo reserveInfo;// 注入，预定信息
+	private String result; //存放操作的结果！
+	private Map<String,String> resultMap=new HashMap<String, String>();
+	public Map<String, String> getResultMap() {
+		return resultMap;
+	}
+
+	public void setResultMap(Map<String, String> resultMap) {
+		this.resultMap = resultMap;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
 	@SuppressWarnings("rawtypes")
 	private PageBean pageBean;
+
 	@SuppressWarnings("rawtypes")
 	public PageBean getPageBean() {
 		return pageBean;
@@ -71,7 +91,8 @@ public class LectureAction extends BaseAction {
 	 */
 
 	public String queryAllLecture() throws Exception {
-		 pageBean=lectureService.pageQuery(pageBean.getPageNo(),pageBean.getPageRecord());
+		pageBean = lectureService.pageQuery(pageBean.getPageNo(),
+				pageBean.getPageRecord());
 		return SUCCESS;
 	}
 
@@ -82,10 +103,12 @@ public class LectureAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String queryAvailableLecture() throws Exception {
-		//lectureInfos = lectureService.queryAvailableLecture();
-		pageBean=lectureService.pageQueryAvailable(pageBean.getPageNo(), pageBean.getPageRecord());
+		// lectureInfos = lectureService.queryAvailableLecture();
+		pageBean = lectureService.pageQueryAvailable(pageBean.getPageNo(),
+				pageBean.getPageRecord());
 		return SUCCESS;
 	}
+
 	/**
 	 * 查询已经预约的讲座
 	 * 
@@ -93,10 +116,11 @@ public class LectureAction extends BaseAction {
 	 * @throws Exception
 	 */
 	public String queryReservedLecture() throws Exception {
+
+		// lectureInfos = lectureService.queryReservedLecture(user);
 		
-		//lectureInfos = lectureService.queryReservedLecture(user);
-		
-		pageBean=lectureService.pageQueryReserved(pageBean.getPageNo(), pageBean.getPageRecord(),user);
+		pageBean = lectureService.pageQueryReserved(pageBean.getPageNo(),
+				pageBean.getPageRecord(), user);
 		return SUCCESS;
 	}
 
@@ -110,13 +134,13 @@ public class LectureAction extends BaseAction {
 	public String addLecture() throws Exception {
 
 		Map request = (Map) ActionContext.getContext().get("request");
-		
-		try{
+
+		try {
 			lectureService.addLecture(lectureInfo);
 			request.put("Result", "success");
-		}catch(RuntimeException e){
+		} catch (RuntimeException e) {
 			request.put("Result", "fail");
-		}		
+		}
 		return SUCCESS;
 	}
 
@@ -129,12 +153,12 @@ public class LectureAction extends BaseAction {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String updateLecture() throws Exception {
 		Map request = (Map) ActionContext.getContext().get("request");
-		try{
-			lectureService.updateLecture(lectureInfo,id);
+		try {
+			lectureService.updateLecture(lectureInfo, id);
 			request.put("Result", "success");
-		}catch(RuntimeException e){
+		} catch (RuntimeException e) {
 			request.put("Result", "fail");
-		}		
+		}
 		return SUCCESS;
 	}
 
@@ -147,14 +171,14 @@ public class LectureAction extends BaseAction {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String deleteLecture() throws Exception {
 		Map request = (Map) ActionContext.getContext().get("request");
-		try{
+		try {
 			lectureService.deleteLecture(id);
 			request.put("Result", "success");
-		}catch(RuntimeException e){
+		} catch (RuntimeException e) {
 			request.put("Result", "fail");
-		}		
+		}
 		return SUCCESS;
-		
+
 	}
 
 	/**
@@ -163,40 +187,60 @@ public class LectureAction extends BaseAction {
 	 * @return
 	 * @throws Exception
 	 */
+	
 	public String reserveLecture() throws Exception {
-		System.out.println("reserveLecture执行");	
-		Map request = (Map) ActionContext.getContext().get("request");
-		try{
-			if (reserveService.reserveLecture(reserveInfo).equals("success")){
+		System.out.println("reserveLecture执行");
+		//Map request = (Map) ActionContext.getContext().get("request");
+		try {
+			if (reserveService.reserveLecture(reserveInfo).equals("success")) {
 				addActionMessage("预约成功");
-				request.put("Result", "success");
-				reserveService.updateCurrentPeople(reserveInfo);//更新现有人数
-			}			
-			else if (reserveService.reserveLecture(reserveInfo).equals("repeat")){
+				result="reserve_success";
+				resultMap.put("result","reserve_success");
+			//	request.put("Result", "success");
+				reserveService.updateCurrentPeople(reserveInfo);// 更新现有人数
+			} else if (reserveService.reserveLecture(reserveInfo).equals(
+					"repeat")) {
 				addActionMessage("已经预约过了");
-			request.put("Result", "repeat");}
-			else if (reserveService.reserveLecture(reserveInfo).equals("overflow")){
+				result="repeat";
+				resultMap.put("result","repeat");
+			//	request.put("Result", "repeat");
+			} else if (reserveService.reserveLecture(reserveInfo).equals(
+					"overflow")) {
 				addActionMessage("overflow");
-			request.put("Result", "fail");}
-		}catch(RuntimeException e){
-			    addActionMessage("预约失败");
-			    request.put("Result", "fail");
-		}		
+				result="overflow";
+				resultMap.put("result","overflow");
+			//	request.put("Result", "overflow");
+			}
+		} catch (RuntimeException e) {
+			addActionMessage("预约失败");
+			result="fail";
+			resultMap.put("result","fail");
+			//request.put("Result", "fail");
+		}
 		return SUCCESS;
 	}
 
 	public String cancelReserveLecture() throws Exception {
-		Map request = (Map) ActionContext.getContext().get("request");
+
+	//	Map request = (Map) ActionContext.getContext().get("request");
 		System.out.println("cancelreserveLecture执行");
-		try{
-		if (reserveService.cancelReserveLecture(reserveInfo).equals("success")){
-			addActionMessage("取消预约成功");
-			reserveService.updateCurrentPeople(reserveInfo);//更新现有人数
-		}		
-		else if(reserveService.cancelReserveLecture(reserveInfo).equals("alread_cancel"))
-			addActionMessage("已经取消了");
-		}catch(RuntimeException e){
+		try {
+			if (reserveService.cancelReserveLecture(reserveInfo).equals(
+					"success")) {
+				addActionMessage("取消预约成功");
+		//		request.put("Result", "success");
+				result="cancel_success";
+				reserveService.updateCurrentPeople(reserveInfo);// 更新现有人数
+			} else if (reserveService.cancelReserveLecture(reserveInfo).equals(
+					"alread_cancel")) {
+				addActionMessage("已经取消了");
+				result="alread_cancel";
+		//		request.put("Result", "alread_cancel");
+			}
+		} catch (RuntimeException e) {
 			addActionMessage("取消预约失败");
+			result="fail";
+		//	request.put("Result", "fail");
 		}
 		return SUCCESS;
 	}

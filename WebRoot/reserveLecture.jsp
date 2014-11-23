@@ -8,11 +8,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bootstrap的HTML标准模板</title>
+<title>讲座预约系统</title>
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<!--你自己的样式文件 -->
-<link href="css/your-style.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/dashBoard.css">
 <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
 <!--[if lt IE 9]>
@@ -20,6 +18,13 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 <style type="text/css">
+.table-center {
+	width: 70%;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .center {
 	width: auto;
 	display: table;
@@ -101,11 +106,12 @@ body {
 
 		<div class="row">
 			<div class="col-md-2 sidebar">
-				<ul class="nav nav-sidebar" role="tablist">
-					<li><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-					<li><s:a href="#div0" role="tab" data-toggle="tab">预约讲座</s:a></li>
-					<li><s:a href="#div1" role="tab" data-toggle="tab">历史讲座查询</s:a></li>
-					<li><s:a href="#div2" role="tab" data-toggle="tab">已约讲座查询</s:a></li>
+				<ul class="nav nav-sidebar">
+					<%-- <li class="active"><a href="#">Overview <span
+							class="sr-only">(current)</span></a></li> --%>
+					<li class="active"><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
+					<li><s:a href="QueryAllLectureAction">查询历史讲座</s:a></li>
+					<li><s:a href="QueryReservedLectureAction">已约讲座查询</s:a></li>
 				</ul>
 				<ul class="nav nav-sidebar">
 					<li><a href="">用户信息</a></li>
@@ -120,106 +126,128 @@ body {
 					<li><a href=""></a></li>
 				</ul>
 			</div>
-			</div>
-			
-			<%-- 	<s:if test="#request.Result=='success'">
-		
-			<script type="text/javascript">
-			alert("操作结果：成功！");
-			</script>
-		<s:else>
-			<script type="text/javascript">
-			alert("操作结果：失败！");
-			</script>
-		</s:else>
-	</s:if> --%>
-			<div  class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-			
-					<table class="table table-bordered table-hover center "
-						contenteditable="false">
-						<thead>
-							<tr class="success">
-								<th>标题</th>
-								<th>主讲人</th>
-								<th>时间</th>
-								<th>地点</th>
-								<th>已预约人数</th>
-								<th>最大允许人数</th>
-								<th>操作</th>
-							</tr>
-						</thead>
-						<tbody>
-							<s:iterator value="pageBean.beanList" status="status">
-								<tr>
-									<td>${title}</td>
-									<td>${lecturer}</td>
-									<td>${time}</td>
-									<td>${address}</td>
-									<td>${currentPeople}</td>
-									<td>${maxPeople}</td>
-
-									<!-- theme=simple 解决了 submit标签自动换行问题 -->
-									<td><s:form action="LectureAction" method="post"
-											theme="simple">
-											<s:hidden name="reserveInfo.username"
-												value="%{#session.user.username}"></s:hidden>
-											<s:hidden name="reserveInfo.name"
-												value="%{#session.user.name}"></s:hidden>
-											<!-- 此id为lectureInfo的id -->
-											<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>
-											<s:submit value="预定" method="reserveLecture"></s:submit>
-											<s:submit value="取消" method="cancelReserveLecture"></s:submit>
-										</s:form></td>
-								</tr>
-							</s:iterator>
-						</tbody>
-
-					</table>
-
-					<!-- 分页 -->
-					<nav>
-						<ul class="pagination center">
-							<!-- <li><a href="#">&laquo;</a></li> -->
-							<li id="li"> <s:a href="QueryAvailableLectureAction?pageBean.pageNo=1"> 首页</s:a></li>
-							<s:if test="pageBean.pageNo > 1 ">
-								<li><s:a
-										href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
-							</s:if>
-							<s:else>
-								<li><s:a href="#">上一页</s:a></li>
-							</s:else>
-							<s:if test="pageBean.pageNo <pageBean.totalPage">
-								<li><s:a
-										href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
-							</s:if>
-							<s:else>
-								<li><s:a href="#">下一页</s:a></li>
-							</s:else>
-							<li><s:a
-									href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
-							</li>
-							<!-- 
-						<li><a href="#">&raquo;</a></li> -->
-						</ul>
-					</nav>
-					<p class="text-center">第${pageBean.pageNo}页/共${pageBean.totalPage}页</p>
-				</div>
 		</div>
 
 
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-			<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
-			<script src="js/jquery-2.1.1.js"></script>
-			<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
-			<script src="js/bootstrap.min.js"></script>
-	<%-- 		<script>
-			$(document).ready(function(){
-					$("li").click(function() {
-						$("#div0").load("QueryAvailableLectureAction #reserve_div");
-					});
-			});	
+			<table id="table"
+				class="table table-bordered table-hover table-center "
+				contenteditable="false">
+				<thead>
+					<tr class="success ">
+						<th style="text-align: center">标题</th>
+						<th style="text-align: center">主讲人</th>
+						<th style="text-align: center">时间</th>
+						<th style="text-align: center">地点</th>
+						<th style="text-align: center">已预约人数</th>
+						<th style="text-align: center">最大允许人数</th>
+						<th colspan="3" style="text-align: center">操作</th>
+					</tr>
+				</thead>
+				<tbody id="tbody">
+					<s:iterator value="pageBean.beanList" status="status">
+						<tr>
+
+							<td>${title}</td>
+							<td>${lecturer}</td>
+							<td>${time}</td>
+							<td>${address}</td>
+							<td>${currentPeople}</td>
+							<td>${maxPeople}</td>
+							<td><a href="#" data-container="body" title="讲座详情" data-toggle="popover" 
+							data-placement="right" data-delay="100"
+							data-content="${content}">详情</a></td>
+							<!-- 表单异步提交，返回result -->
+							<!-- theme=simple 解决了 submit标签自动换行问题 -->
+							<td><s:form id="%{id}" action="AjaxReserveLecture"
+									method="get" namespace="/ajax" role="form" theme="simple">
+									<s:hidden name="reserveInfo.username"
+										value="%{#session.user.username}"></s:hidden>
+									<s:hidden name="reserveInfo.name" value="%{#session.user.name}"></s:hidden>
+									<!-- 此id为lectureInfo的id -->
+									<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>
+									<button type="submit" id="reserve" class="btn btn-default">预定</button>
+
+								</s:form></td>
+							<td><s:form id="%{id}" action="AjaxCancelReserveLecture"
+									method="get" namespace="/ajax" role="form" theme="simple">
+									<s:hidden name="reserveInfo.username"
+										value="%{#session.user.username}"></s:hidden>
+									<s:hidden name="reserveInfo.name" value="%{#session.user.name}"></s:hidden>
+									<!-- 此id为lectureInfo的id -->
+									<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>
+
+									<button type="submit" id="cancel" class="btn btn-default">取消</button>
+								</s:form></td>
+						</tr>
+					</s:iterator>
+				</tbody>
+
+			</table>
 			
+			<!-- 分页 -->
+			<nav>
+				<ul class="pagination center">
+					<li><s:a href="QueryAvailableLectureAction?pageBean.pageNo=1">首页</s:a></li>
+					<s:if test="pageBean.pageNo > 1 ">
+						<li><s:a
+								href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
+					</s:if>
+					<s:else>
+						<li><s:a href="#">上一页</s:a></li>
+					</s:else>
+					<s:if test="pageBean.pageNo <pageBean.totalPage">
+						<li><s:a
+								href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
+					</s:if>
+					<s:else>
+						<li><s:a href="#">下一页</s:a></li>
+					</s:else>
+					<li><s:a
+							href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
+					</li>
+
+				</ul>
+			</nav>
+			<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+				  Popover on left
+				</button>
+			<p class="text-center">第${pageBean.pageNo}页/共${pageBean.totalPage}页</p>
+		</div>
+	</div>
+
+	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+	<script src="js/jquery-2.1.1.js"></script>
+	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.form.js"></script>
+	<script src="js/myajax.js"></script>
+	<script>
+		$(document).ready(function(){
+		$("form").submit(function(){
+			//alert($(this).serialize())
+			//id的作用都是为了锁定预约按钮
+			var id=$(this).attr("id");
+			$(this).ajaxSubmit(function(data){
+				alert(data.result);
+				if(data.result=="reserve_success")
+					$("#"+id).children("#reserve").text("已预约");
+					else if(data.result=="cancel_success")
+					$("#"+id).children("#reserve").text("预约");			
+				
+			});
+			 return false;//阻止表单默认提交 
 			
-			</script> --%>
+			});
+		});
+	</script>
+	<!-- popover弹出框需要激活才能使用！！！原因是它不是单纯的css插件 -->
+	<script >
+	
+	$(function () { $("[data-toggle='popover']").popover(); 
+	
+	});
+	</script>
 </body>
 </html>

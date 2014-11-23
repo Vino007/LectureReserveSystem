@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bootstrap的HTML标准模板</title>
+<title>讲座预约系统</title>
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <!--你自己的样式文件 -->
@@ -20,20 +20,21 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 <style type="text/css">
-	.center {
-  width: auto;
-  display: table;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 100dx;
- 
+.center {
+	width: auto;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100dx;
 }
-body{
-        padding-top: 70px;
-      }
+
+body {
+	padding-top: 70px;
+}
+
 .text-center {
-  text-align: center;
-}	
+	text-align: center;
+}
 </style>
 </head>
 <body>
@@ -103,14 +104,15 @@ body{
 
 		<div class="row">
 			<div class="col-md-2 sidebar">
-								
-					<ul class="nav nav-sidebar" role="tablist">
-					<li><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-					<li><s:a href="#div0" role="tab" data-toggle="tab">预约讲座</s:a></li>
-					<li><s:a href="#div1" role="tab" data-toggle="tab">历史讲座查询</s:a></li>
-					<li><s:a href="#div2" role="tab" data-toggle="tab">已约讲座查询</s:a></li>
+
+				<ul class="nav nav-sidebar">
+					<%-- <li class="active"><a href="#">Overview <span
+							class="sr-only">(current)</span></a></li> --%>
+					<li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
+					<li class="active"><s:a href="QueryAllLectureAction">查询历史讲座</s:a></li>
+					<li><s:a href="QueryReservedLectureAction">已约讲座查询</s:a></li>
 				</ul>
-					<%-- <li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
+				<%-- <li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
 					<li class="active"><s:a href="QueryAllLectureAction">查询历史讲座</s:a></li>
 					<li><s:a href="QueryReservedLectureAction">已约讲座查询</s:a></li>
 				</ul> --%>
@@ -128,51 +130,50 @@ body{
 				</ul>
 			</div>
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<table  class="table table-bordered table-hover center " contenteditable="true" >
+				<table class="table table-bordered table-hover center "
+					contenteditable="true">
 					<thead>
-					<tr class="success">
-						<th>标题</th>
-						<th>主讲人</th>
-						<th>时间</th>
-						<th>地点</th>
-						<th>已预约人数</th>
-						<th>最大允许人数</th>
-					</tr>
+						<tr class="success">
+							<th>标题</th>
+							<th>主讲人</th>
+							<th>时间</th>
+							<th>地点</th>
+							<th>已预约人数</th>
+							<th>最大允许人数</th>
+						</tr>
 					</thead>
 					<tbody>
-					<s:iterator value="pageBean.beanList" status="status">
-						<tr>
-							<td>${title}</td>
-							<td>${lecturer}</td>
-							<td>${time}</td>
-							<td>${address}</td>
-							<td>${currentPeople}</td>
-							<td>${maxPeople}</td>
-						<tr>
-					</s:iterator>
+						<s:iterator value="pageBean.beanList" status="status">
+							<tr>
+								<td>${title}</td>
+								<td>${lecturer}</td>
+								<td>${time}</td>
+								<td>${address}</td>
+								<td>${currentPeople}</td>
+								<td>${maxPeople}</td>
+							<tr>
+						</s:iterator>
 					</tbody>
-					
+
 				</table>
 				<!-- 分页 -->
 				<nav>
-										<ul class="pagination center">
+					<ul class="pagination center">
 						<!-- <li><a href="#">&laquo;</a></li> -->
 						<li><s:a href="QueryALLLectureAction?pageBean.pageNo=1">首页</s:a></li>
 						<s:if test="pageBean.pageNo > 1 ">
-						<li><s:a
-								href="QueryAllLectureAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
+							<li><s:a
+									href="QueryAllLectureAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
 						</s:if>
 						<s:else>
-							<li><s:a
-								href="#">上一页</s:a></li>
+							<li><s:a href="#">上一页</s:a></li>
 						</s:else>
 						<s:if test="pageBean.pageNo <pageBean.totalPage">
-						<li><s:a
-								href="QueryAllLectureAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
+							<li><s:a
+									href="QueryAllLectureAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
 						</s:if>
 						<s:else>
-							<li><s:a
-								href="#">下一页</s:a></li>
+							<li><s:a href="#">下一页</s:a></li>
 						</s:else>
 						<li><s:a
 								href="QueryAllLectureAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>

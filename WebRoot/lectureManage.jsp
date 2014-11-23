@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bootstrap的HTML标准模板</title>
+<title>讲座预约系统</title>
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <!--你自己的样式文件 -->
@@ -88,13 +88,14 @@
 
 		<div class="row">
 			<div class="col-md-2 sidebar">
-				<ul class="nav nav-sidebar" role="tablist">
+				<ul class="nav nav-sidebar" >
 					<%-- <li class="active"><a href="#">Overview <span
 							class="sr-only">(current)</span></a></li> --%>
-					<li><s:a href="#div0" role="tab" data-toggle="tab" id="a_reserve">预约讲座</s:a></li>
-					<li><s:a href="#div1" role="tab" data-toggle="tab" id="a_queryAll">历史讲座查询</s:a></li>
-					<li><s:a href="#div2" role="tab" data-toggle="tab" id="a_queryReserved">已约讲座查询</s:a></li>
+					<li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
+					<li><s:a href="QueryAllLectureAction">查询历史讲座</s:a></li>
+					<li><s:a href="QueryReservedLectureAction">已约讲座查询</s:a></li>
 				</ul>
+				
 				<ul class="nav nav-sidebar">
 					<li><a href="">用户信息</a></li>
 					<li><a href="">Nav item again</a></li>
@@ -125,24 +126,7 @@
 		<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
 		<script src="js/bootstrap.min.js"></script>
 		<!-- 异步载入页面 -->
-		<script>
-			$(document).ready(function(){
-					$("#a_reserve").click(function() {
-						$("#div0").load("QueryAvailableLectureAction");
-					});
-			});	
-			$(document).ready(function(){
-				$("#a_queryAll").click(function() {
-					$("#div1").load("QueryAllLectureAction");
-				});
-		});	
-			$(document).ready(function(){
-				$("#a_queryReserved").click(function() {
-					$("#div2").load("QueryReservedLectureAction");
-				});
-		});	
-						
-			</script>
+		
 		<%-- <s:a href="QueryAllLectureAction">全部讲座查询</s:a><br>
 	<s:a href="QueryReservedLectureAction">已预约的讲座查询</s:a><br>
 	<s:a href="addLecture.jsp">讲座新增</s:a><br>

@@ -4,15 +4,24 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
+
 	<constant name="struts.devMode" value="true" />
 	<!-- 使用spring来管理struts的Action -->
 	<constant name="struts.objectFactory" value="spring"></constant>
 	<!-- 在submit使用method必须要加下面这句 -->
 	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
 	<!--namespace用来指定action的url访问路径 -->
+
 	<package name="action" extends="struts-default">
+		<!-- 添加了json的result-type和拦截器，这样就可以不用extends json-default -->
+		<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
 		<interceptors>
-			<interceptor name="loginInterceptor" class="com.vino.lecture.interceptor.LoginInterceptor">
+			<interceptor name="json"
+				class="org.apache.struts2.json.JSONInterceptor" />
+			<interceptor name="loginInterceptor"
+				class="com.vino.lecture.interceptor.LoginInterceptor">
 			</interceptor>
 			<interceptor-stack name="myStack">
 				<interceptor-ref name="defaultStack"></interceptor-ref>
@@ -22,30 +31,33 @@
 				<interceptor-ref name="timer"></interceptor-ref>
 			</interceptor-stack>
 		</interceptors>
-		
+		<global-results>
+			<result name="login">/login.jsp</result>
+		</global-results>
 		<!-- class的值与bean的name值对应 -->
 		<action name="LoginAction" class="loginAction">
 			<result name="success">/home.jsp</result>
 			<result name="input">/login.jsp</result>
 			<result name="login">/login.jsp</result>
-			
+
 			<!-- defaultStack必须要有，要不然会获取不了表单数据 -->
 			<interceptor-ref name="defaultStack"></interceptor-ref>
 			<interceptor-ref name="logger" />
 			<interceptor-ref name="timer"></interceptor-ref>
 		</action>
-		
+
 		<!-- 预约和取消预约的action采用submit中使用submit方式 -->
 		<action name="LectureAction" class="lectureAction">
 			<result name="success">/reserveLecture.jsp</result>
 			<result name="login">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
-		
+
 		<!-- 讲座管理action -->
-		
+
 		<!-- 查询所有讲座 -->
-		<action name="QueryAllLectureAction" class="lectureAction" method="queryAllLecture">
+		<action name="QueryAllLectureAction" class="lectureAction"
+			method="queryAllLecture">
 			<result name="success">/querylecture.jsp</result>
 			<result name="login">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
@@ -64,7 +76,7 @@
 			<result name="login">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
-				
+
 		<action name="AddLectureAction" class="lectureAction" method="addLecture">
 			<result name="success">/lectureManage.jsp</result>
 			<result name="login">/login.jsp</result>
@@ -85,40 +97,103 @@
 			<result name="login">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
-		
+
 		<!-- 用户管理action -->
-		
-		<action name="AddUserAction" class="userAction"
-			method="addUser">
+
+		<action name="AddUserAction" class="userAction" method="addUser">
 			<result name="success">/userManage.jsp</result>
 			<result name="input">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
-		<action name="UpdateUserAction" class="userAction"
-			method="updateUser">
+		<action name="UpdateUserAction" class="userAction" method="updateUser">
 			<result name="success">/userManage.jsp</result>
 			<result name="input">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
-		<action name="DeleteUserAction" class="userAction"
-			method="deleteUser">
+		<action name="DeleteUserAction" class="userAction" method="deleteUser">
 			<result name="success">/userManage.jsp</result>
 			<result name="input">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
-		<action name="QueryAllUserAction" class="userAction"
-			method="queryAllUser">
+		<action name="QueryAllUserAction" class="userAction" method="queryAllUser">
 			<result name="success">/queryUser.jsp</result>
 			<result name="input">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
-			<action name="PageQueryUserAction" class="userAction"
-			method="pageQueryUser">
+		<action name="PageQueryUserAction" class="userAction" method="pageQueryUser">
 			<result name="success">/queryUser.jsp</result>
 			<result name="input">/login.jsp</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
+
+
+
 
 	</package>
+	<!-- 通过创建一个新的包继承json-default实现权限不足跳页 -->
+	<package name="ajax" extends="json-default" namespace="/ajax">
 
+		<interceptors>
+			<interceptor name="loginInterceptor"
+				class="com.vino.lecture.interceptor.LoginInterceptor">
+			</interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<!-- 防止用户未登录进入后台 -->
+				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+				<interceptor-ref name="logger"></interceptor-ref>
+				<interceptor-ref name="timer"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+
+		<global-results>
+			<result name="login">/login.jsp</result>
+		</global-results>
+		<!-- 预约和取消预约的action采用submit中使用submit方式 -->
+		<action name="AjaxReserveLecture" class="lectureAction" method="reserveLecture">
+			<result name="success" type="json">
+				<!-- <param name="root">result</param> -->
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+
+		</action>
+
+		<action name="AjaxCancelReserveLecture" class="lectureAction"
+			method="cancelReserveLecture">
+			<result name="success" type="json">
+				<!-- <param name="root">result</param> -->
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+
+		</action>
+
+		<!-- 讲座管理action -->
+
+		<!-- 查询所有讲座 -->
+		<action name="AjaxQueryAllLecture" class="lectureAction"
+			method="queryAllLecture">
+			<result name="success" type="json">
+				<param name="root">pageBean</param>
+			</result>
+
+		</action>
+		<!-- 查询可预约的讲座 -->
+		<action name="AjaxQueryAvailableLecture" class="lectureAction"
+			method="queryAvailableLecture">
+			<result name="success" type="json">
+				<param name="root">pageBean</param>
+			</result>
+
+		</action>
+		<!-- 查询用户已经预约过的讲座 -->
+		<action name="AjaxQueryReservedLecture" class="lectureAction"
+			method="queryReservedLecture">
+			<result name="success" type="json">
+				<param name="root">pageBean</param>
+
+			</result>
+
+		</action>
+	</package>
 </struts>
