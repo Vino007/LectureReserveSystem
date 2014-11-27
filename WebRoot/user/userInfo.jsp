@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -11,14 +10,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>讲座预约系统</title>
 <!-- Bootstrap -->
-<link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dashBoard.css">
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../css/dashBoard.css">
 <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
 <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
+<style type="text/css">
+.center {
+	width: auto;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+}
 
+body {
+	padding-top: 70px;
+}
+
+.text-center {
+	text-align: center;
+}
+</style>
 </head>
 <body>
 	<!-- 导航条 -->
@@ -83,75 +97,58 @@
 	<!-- 侧边栏 -->
 
 	<!-- 加上这句整齐！ -->
-	<div class="container-fluid">
+	<div class="container-fluid ">
 
 		<div class="row">
 			<div class="col-md-2 sidebar">
-				<ul class="nav nav-sidebar" >
-					<%-- <li class="active"><a href="#">Overview <span
-							class="sr-only">(current)</span></a></li> --%>
+				<ul class="nav nav-sidebar">
+					<%-- 	<li><a href="#">Overview <span class="sr-only">(current)</span></a></li> --%>
 					<li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
 					<li><s:a href="QueryAllLectureAction">查询历史讲座</s:a></li>
 					<li><s:a href="QueryReservedLectureAction">已约讲座查询</s:a></li>
 				</ul>
-				
 				<ul class="nav nav-sidebar">
-				
-				
-					<li><a href="${pageContext.request.contextPath}/user/userInfo.jsp">用户信息</a></li>
-					<li><a href="user/userInfo.jsp">修改密码</a></li>
-					<li><a href="">One more nav</a></li>
-					<li><a href="">Another nav item</a></li>
-					<li><a href="">More navigation</a></li>
+					<li class="active"><a href="">用户信息</a></li>
+					<li><a href="">关于</a></li>
+					<li><a href=""></a></li>
+					<li><a href=""></a></li>
+					<li><a href=""></a></li>
 				</ul>
 				<ul class="nav nav-sidebar">
-					<li><a href="">Nav item again</a></li>
-					<li><a href="">One more nav</a></li>
-					<li><a href="">Another nav item</a></li>
+					<li><a href=""></a></li>
+					<li><a href=""></a></li>
+					<li><a href=""></a></li>
 				</ul>
 			</div>
-			<!--tab的内容  -->
+	
+	
+			
+		<!-- 用户信息显示部分 -->	
 			
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<div class="tab-content">
-					<div class="tab-pane active" id="div0"></div>
-					<div class="tab-pane" id="div1"></div>
-					<div class="tab-pane" id="div2">div2</div>
-				</div>
+						<h2>用户信息</h2>
+						<hr>
+						<div><span>用户名:</span><span>${user.username}</span></div>
+						<div><span>姓名:</span><span>${user.name}</span></div>
+						<button>修改</button>
+						<button>提交</button>						
 			</div>
-		</div>
-		</div>
 
-		<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
-		<script src="js/jquery-2.1.1.js"></script>
-		<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
-		<script src="js/bootstrap.min.js"></script>
-		<!-- 异步载入页面 -->
-		
-		<%-- <s:a href="QueryAllLectureAction">全部讲座查询</s:a><br>
-	<s:a href="QueryReservedLectureAction">已预约的讲座查询</s:a><br>
-	<s:a href="addLecture.jsp">讲座新增</s:a><br>
-	<s:a href="deleteLecture.jsp">讲座删除</s:a><br>
-	<s:a href="updateLecture.jsp">讲座修改</s:a><br>
-	<s:a href="QueryAvailableLectureAction">讲座预定</s:a>
-	<hr>
-	<hr> 
-	<s:if test="#request.Result=='success'">
-		
-			<script type="text/javascript">
-			alert("操作结果：成功！");
-			</script>
-		<s:else>
-			<script type="text/javascript">
-			alert("操作结果：失败！");
-			</script>
-		</s:else>
-	</s:if>
-	<s:if test="hasActionMessages()">
-	<script type="text/javascript">
-		alert(<s:actionmessage/>);
+		</div>
+	</div>
+
+	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+	<script src="../js/jquery-2.1.1.js"></script>
+	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+	<script src="../js/bootstrap.min.js"></script>
+	<!-- popover弹出框需要激活才能使用！！！原因是它不是单纯的css插件 -->
+	<script >
+	$(document).ready(function() {
+	$(function () { $("[data-toggle='popover']").popover(); 
+	
+	});
+	});
 	</script>
-	</s:if>
-	<s:actionmessage/> --%>
 </body>
 </html>
+

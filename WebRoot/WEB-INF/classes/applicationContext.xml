@@ -44,6 +44,11 @@
 		<property name="reserveInfo" ref="reserveInfo"></property>
 		<property name="pageBean" ref="pageBean"></property>
 		</bean>
+		
+	<bean id="downloadAction" name="downloadAction" class="com.vino.lecture.action.FileDownloadAction"
+		scope="prototype" >
+		<property name="excelService" ref="excelService"></property>
+		</bean>
 	
 	<!-- =============================================================================== -->
 	<!-- <bean id="userDao" class="com.vino.lecture.dao.UserDao" parent="baseDao"></bean>

@@ -13,3 +13,5 @@
 
 11.22 异步分页完成
 
+11.27 上传文件，导出预约名单EXCEL下载，struts增加一个authorityCheck包检查是否登录，excel功能由JXL提供
+
