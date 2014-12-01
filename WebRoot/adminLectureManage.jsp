@@ -4,7 +4,6 @@
 
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -90,25 +89,30 @@
 				<ul class="nav nav-sidebar" >
 					<%-- <li class="active"><a href="#">Overview <span
 							class="sr-only">(current)</span></a></li> --%>
-					<li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
-					<li><s:a href="QueryAllLectureAction?pageBean.pageNo=1">查询历史讲座</s:a></li>
-					<li><s:a href="QueryReservedLectureAction?pageBean.pageNo=1">已听讲座查询</s:a></li>
+					
+					<li><a href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
+					<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
+					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
+					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
+					<li><s:a href="#">考勤信息查询</s:a></li> 
+					<!-- 上传excel，单个修改考勤，查询考勤 -->
+					<li><s:a href="#">考勤信息管理</s:a></li>
 				</ul>
 				
 				<ul class="nav nav-sidebar">
-				
-				
-					<li><a href="${pageContext.request.contextPath}/user/userInfo.jsp">用户信息</a></li>
+					<!-- 用户管理中有批量导入用户，用户增删改查 -->
+					<li><a href="#">用户管理</a></li>
+					<!-- 基本信息+已听讲座次数， -->
+					<li><a href="#">用户信息查询</a></li>
+					<li><a href="#">待定</a></li>
+				</ul>
+				<ul class="nav nav-sidebar">			
+					<li><a href="${pageContext.request.contextPath}/user/userInfo.jsp">新增管理员</a></li>
 					<li><a href="user/userInfo.jsp">修改密码</a></li>
-					<li><a href="">One more nav</a></li>
-					<li><a href="">Another nav item</a></li>
-					<li><a href="">More navigation</a></li>
+					<li><a href="#">关于</a></li>
+				
 				</ul>
-				<ul class="nav nav-sidebar">
-					<li><a href="">Nav item again</a></li>
-					<li><a href="">One more nav</a></li>
-					<li><a href="">Another nav item</a></li>
-				</ul>
+				
 			</div>
 			<!--tab的内容  -->
 			
@@ -128,30 +132,6 @@
 		<script src="js/bootstrap.min.js"></script>
 		<!-- 异步载入页面 -->
 		
-		<%-- <s:a href="QueryAllLectureAction">全部讲座查询</s:a><br>
-	<s:a href="QueryReservedLectureAction">已预约的讲座查询</s:a><br>
-	<s:a href="addLecture.jsp">讲座新增</s:a><br>
-	<s:a href="deleteLecture.jsp">讲座删除</s:a><br>
-	<s:a href="updateLecture.jsp">讲座修改</s:a><br>
-	<s:a href="QueryAvailableLectureAction">讲座预定</s:a>
-	<hr>
-	<hr> 
-	<s:if test="#request.Result=='success'">
-		
-			<script type="text/javascript">
-			alert("操作结果：成功！");
-			</script>
-		<s:else>
-			<script type="text/javascript">
-			alert("操作结果：失败！");
-			</script>
-		</s:else>
-	</s:if>
-	<s:if test="hasActionMessages()">
-	<script type="text/javascript">
-		alert(<s:actionmessage/>);
-	</script>
-	</s:if>
-	<s:actionmessage/> --%>
+
 </body>
 </html>

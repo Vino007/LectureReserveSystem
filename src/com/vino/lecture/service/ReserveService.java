@@ -7,11 +7,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vino.lecture.domain.PageBean;
 import com.vino.lecture.domain.ReserveInfo;
 
 @Service
 public class ReserveService extends BaseService {
 	private List<Object> condition = new ArrayList<Object>();
+	/**
+	 * 分页查询预约清单
+	 * @param pageNo
+	 * @param pageRecord
+	 * @param id
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public PageBean<ReserveInfo> queryReserveList(int pageNo,int pageRecord,long id){
+		String hql_count="select count(*) from ReserveInfo r where r.lectureId=?";
+		String hql_list="from ReserveInfo r where r.lectureId=?";
+		condition = new ArrayList<Object>();
+		condition.add(id);
+		
+		return reserveDao.queryPageWithCondition(pageNo, pageRecord, condition, hql_count, hql_list);
+	}
 
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void updateCurrentPeople(ReserveInfo reserveInfo) {

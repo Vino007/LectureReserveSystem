@@ -21,7 +21,11 @@ public class DateConvertUtils {
 		 *   H 24小时制 h 12小时制
 		 *   m分钟
 		 *   */
-		DateFormat df=new SimpleDateFormat("yyyy.MM.dd HH:mm");
+		DateFormat df=null;
+		if(time.indexOf("T")!=-1){
+		 df=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		}else
+		 df=new SimpleDateFormat("yyyy.MM.dd HH:mm");
 		Date date=null;
 		try {
 			date = df.parse(time);

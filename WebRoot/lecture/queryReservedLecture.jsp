@@ -104,8 +104,8 @@ body {
 				<ul class="nav nav-sidebar">
 					<%-- 	<li><a href="#">Overview <span class="sr-only">(current)</span></a></li> --%>
 					<li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
-					<li><s:a href="QueryAllLectureAction">查询历史讲座</s:a></li>
-					<li class="active"><s:a href="QueryReservedLectureAction">已约讲座查询</s:a></li>
+					<li ><s:a href="QueryAllLectureAction?pageBean.pageNo=1">查询历史讲座</s:a></li>
+					<li class="active"><s:a href="QueryReservedLectureAction?pageBean.pageNo=1">已听讲座查询</s:a></li>
 				</ul>
 				<ul class="nav nav-sidebar">
 					<li><a href="${pageContext.request.contextPath}/user/userInfo.jsp">用户信息</a></li>

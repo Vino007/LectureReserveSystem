@@ -18,6 +18,14 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 <style type="text/css">
+.table-full {
+	width: 100%;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100dx;
+}
+
 .center {
 	width: auto;
 	display: table;
@@ -48,7 +56,7 @@ body {
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">讲座预约系统</a>
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/adminLectureManage.jsp">讲座预约系统</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -98,66 +106,62 @@ body {
 	<!-- 侧边栏 -->
 
 	<!-- 加上这句整齐！ -->
-	<div class="container-fluid ">
+<div class="container-fluid">
 
 		<div class="row">
 			<div class="col-md-2 sidebar">
-
-				<ul class="nav nav-sidebar">
+				<ul class="nav nav-sidebar" >
 					<%-- <li class="active"><a href="#">Overview <span
 							class="sr-only">(current)</span></a></li> --%>
-					<li><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
-					<li class="active"><s:a href="QueryAllLectureAction?pageBean.pageNo=1">查询历史讲座</s:a></li>
-					<li><s:a href="QueryReservedLectureAction?pageBean.pageNo=1">已听讲座查询</s:a></li>
+					
+						<li><a href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
+					<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
+					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
+					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
+					<li><a href="#">考勤信息查询</a></li>
+					<!-- 上传excel，单个修改考勤，查询考勤 -->
+					<li><a href="#">考勤信息管理</a></li>
 				</ul>
-		
+				
 				<ul class="nav nav-sidebar">
-					<li><a href="${pageContext.request.contextPath}/user/userInfo.jsp">用户信息</a></li>
-					<li><a href="">关于</a></li>
-					<li><a href=""></a></li>
-					<li><a href=""></a></li>
-					<li><a href=""></a></li>
+					<!-- 用户管理中有批量导入用户，用户增删改查 -->
+					<li><a href="#">用户管理</a></li>
+					<!-- 基本信息+已听讲座次数， -->
+					<li><a href="#">用户信息查询</a></li>
+					<li><a href="#">待定</a></li>
 				</ul>
-				<ul class="nav nav-sidebar">
-					<li><a href=""></a></li>
-					<li><a href=""></a></li>
-					<li><a href=""></a></li>
+				<ul class="nav nav-sidebar">			
+					<li><a href="${pageContext.request.contextPath}/user/userInfo.jsp">新增管理员</a></li>
+					<li><a href="user/userInfo.jsp">修改密码</a></li>
+					<li><a href="#">关于</a></li>
+				
 				</ul>
+				
 			</div>
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<table id="table" class="table table-bordered table-hover center "
+		
+				<table id="table" class="table table-bordered table-hover table-full "
 					contenteditable="false">
 					<thead>
 						<tr class="success">
-							<th>标题</th>
-							<th>主讲人</th>
-							<th>时间</th>
-							<th>地点</th>
-							<th>已预约人数</th>
-							<th>最大允许人数</th>
-							<th>详情</th>
+						<th style="text-align: center">学号</th>
+						<th style="text-align: center">姓名</th>					
 						</tr>
 					</thead>
 					<tbody id="tbody">
 						<s:iterator value="pageBean.beanList" status="status">
 							<tr>
-								<td>${title}</td>
-								<td>${lecturer}</td>
-								<td>${time}</td>
-								<td>${address}</td>
-								<td>${currentPeople}</td>
-								<td>${maxPeople}</td>
-								<td><a href="#" data-container="body" title="讲座详情" data-toggle="popover" 
-							data-placement="right" data-delay="100"
-							data-content="${content}">详情</a></td>
+								
+								<td >${username}</td>
+								<td >${name}</td>
 							<tr>
 						</s:iterator>
 					</tbody>
 						
 				</table>
-				<!-- 分页 -->
+					<!-- 分页 -->
 				<nav>
-					<ul class="pagination center">
+						<ul class="pagination center">
 						<!-- <li><a href="#">&laquo;</a></li> -->
 						<%-- <li><s:a href="QueryReservedLectureAction?pageBean.pageNo=1">首页</s:a></li> --%>
 						
@@ -184,15 +188,15 @@ body {
 	<script src="${pageContext.request.contextPath}/js/jquery-2.1.1.js"></script>
 	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-	<script src="${pageContext.request.contextPath}/js/myajax.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin_myajax.js"></script>
 	<script>
 		//首页
 		$(document).ready(function() {
 			$("#firstPage").click(function() {
-				$.get("ajax/AjaxQueryAllLecture", {
+				$.get("ajax/AjaxQueryReserveList", {
 					"pageBean.pageNo" : "1"
 				}, function(data, status) {
-					queryReservedCallback(data, status);
+					queryReserveListCallback(data, status);
 				});
 			});
 		});
@@ -204,10 +208,10 @@ body {
 					var nextPage = Number($("#pageNo").text()) - 1;
 				else
 					var nextPage = 1;
-				$.get("ajax/AjaxQueryAllLecture", {
+				$.get("ajax/AjaxQueryReserveList", {
 					"pageBean.pageNo" : nextPage
 				}, function(data, status) {
-					queryReservedCallback(data, status);
+					queryReserveListCallback(data, status);
 
 				});
 			});
@@ -221,10 +225,10 @@ body {
 					var nextPage = Number($("#pageNo").text()) + 1;//加页
 				else
 					var nextPage = Number($("#pageNo").text());//保持不变
-				$.get("ajax/AjaxQueryAllLecture",{
+				$.get("ajax/AjaxQueryReserveList",{
 					"pageBean.pageNo" : nextPage
 					},function(data,status) {
-					queryReservedCallback(data,status);
+						queryReserveListCallback(data,status);
 					});
 				});
 		 });
@@ -232,21 +236,16 @@ body {
 		//尾页
 		$(document).ready(function() {
 			$("#lastPage").click(function() {
-				$.get("ajax/AjaxQueryAllLecture", {
+				$.get("ajax/AjaxQueryReserveList", {
 					"pageBean.pageNo" : $("#totalPage").text()
 				}, function(data, status) {
-					queryReservedCallback(data, status);
+					queryReserveListCallback(data, status);
 
 				});
 			});
 		});
 	</script>
-	<!-- popover弹出框需要激活才能使用！！！原因是它不是单纯的css插件 -->
-	<script >
-	
-	$(function () { $("[data-toggle='popover']").popover(); 
-	
-	});
-	</script>
+
+
 </body>
 </html>

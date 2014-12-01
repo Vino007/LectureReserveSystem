@@ -57,6 +57,21 @@ public class LectureService extends BaseService {
 		lectureDao.queryWithCondition(hql, condition);
 		return lectureDao.queryWithCondition(hql, condition);
 	}
+	 /**
+	  * 通过id来查询讲座
+	  * @param id
+	  * @return
+	  */
+		@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+		public LectureInfo queryLectureById(long id) {
+
+			String hql = "from LectureInfo l where l.id=?";
+			condition = new ArrayList<Object>();
+			condition.add(id);
+			
+			return (LectureInfo) lectureDao.query(hql, condition);
+		}
+	
 	/**
 	 * 分页查询
 	 * @param pageNo 当前页码
@@ -130,12 +145,12 @@ public class LectureService extends BaseService {
 	/**
 	 * 
 	 * @param lectureInfo
-	 * @param id
-	 *            表单中输入的id，并不是lectureInfo中的id
+	 * 
+	 *           
 	 * @throws RuntimeException
 	 */
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void updateLecture(LectureInfo lectureInfo, long id)
+	public void updateLecture(LectureInfo lectureInfo)
 			throws RuntimeException {
 		String hql = "update LectureInfo set title=?,lecturer=?,time=?,address=?"
 				+ ",maxPeople=?,available=?,content=? where id=?";
@@ -147,7 +162,7 @@ public class LectureService extends BaseService {
 		condition.add(lectureInfo.getMaxPeople());
 		condition.add(lectureInfo.getAvailable());
 		condition.add(lectureInfo.getContent());
-		condition.add(id);
+		condition.add(lectureInfo.getId());
 		try {
 			lectureDao.updateWithCondition(hql, condition);
 			timer();

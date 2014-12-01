@@ -11,8 +11,9 @@
 <s:debug></s:debug>
 <center>
 	<h1>主菜单</h1>
-	<s:a href="lectureManage.jsp" >讲座管理</s:a><br>
+	<s:a href="lectureManage.jsp" >学生登陆</s:a><br>
 	<s:a href="userManage.jsp">用户管理</s:a><br>
+	<s:a href="adminLectureManage.jsp">管理员登陆</s:a>
 </center>
 </body>
 </html>

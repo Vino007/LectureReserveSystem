@@ -38,10 +38,10 @@ public class ExcelService extends BaseService{
 	 */
 	List<Object> condition;
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
-	public void createReserveInfoExcel(){
+	public void createReserveInfoExcel(long id){
 		String hql="from ReserveInfo r where r.lectureId=?";
 		condition=new ArrayList<Object>();
-		condition.add((long)1);
+		condition.add(id);
 		List<ReserveInfo> reserveInfos=reserveDao.queryWithCondition(hql, condition);
 		//查询讲座名
 		String title=(String) lectureDao.query("select l.title from LectureInfo l where l.id=?", condition);
@@ -66,7 +66,9 @@ public class ExcelService extends BaseService{
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * 将excel输入到输出流中
+	 */
 	public void importExcel(){
 		try {
 			readExcel(new FileInputStream(ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/reserveinfo.xls")));

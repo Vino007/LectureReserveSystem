@@ -12,6 +12,13 @@ public class FileDownloadAction extends ActionSupport {
 	/**
 	 * 
 	 */
+	private long lectureId;
+	public long getLectureId() {
+		return lectureId;
+	}
+	public void setLectureId(long lectureId) {
+		this.lectureId = lectureId;
+	}
 	private static final long serialVersionUID = 1L;
 	private ExcelService excelService;
 	public ExcelService getExcelService() {
@@ -44,9 +51,9 @@ public class FileDownloadAction extends ActionSupport {
 		// TODO Auto-generated method stub
 		return SUCCESS;
 	}
-	public String createExcel() throws Exception {
+	public String exportReserveListExcel() throws Exception {
 		// TODO Auto-generated method stub
-		excelService.createReserveInfoExcel();
+		excelService.createReserveInfoExcel(lectureId);
 		excelService.importExcel();
 		return SUCCESS;
 	}

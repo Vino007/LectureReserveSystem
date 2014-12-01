@@ -83,6 +83,13 @@
 			<result name="login">/login.jsp</result>
 
 		</action>
+		
+			<action name="AdminQueryAllLectureAction" class="lectureAction"
+			method="queryAllLecture">
+			<result name="success">/lecture/admin_queryLecture.jsp</result>
+			<result name="login">/login.jsp</result>
+
+		</action>
 		<!-- 查询可预约的讲座 -->
 		<action name="QueryAvailableLectureAction" class="lectureAction"
 			method="queryAvailableLecture">
@@ -97,11 +104,26 @@
 			<result name="login">/login.jsp</result>
 
 		</action>
+		
+			<action name="QueryLectureByIdAction" class="lectureAction"
+			method="queryLectureById">
+			<result name="success">/lecture/admin_updateLecture.jsp</result>
+			<result name="login">/login.jsp</result>
+
+		</action>
+		
+		<!-- 查询预约清单 -->
+		<action name="QueryReserveListAction" class="lectureAction"
+			method="queryReserveList">
+			<result name="success">/lecture/admin_reserveList.jsp</result>
+			<result name="login">/login.jsp</result>
+
+		</action>
 
 		<action name="AddLectureAction" class="lectureAction" method="addLecture">
-			<result name="success">/lectureManage.jsp</result>
+			<result name="success">/lecture/admin_addLecture.jsp</result>
 			<result name="login">/login.jsp</result>
-			<result name="input">/lecture/addLecture.jsp</result>
+			<result name="input">/lecture/admin_addLecture.jsp</result>
 
 		</action>
 
@@ -155,7 +177,7 @@
 			</result>
 		</action>
 		<!-- 创建excel并转发到download action -->
-		<action name="CreateExcelAction" class="downloadAction" method="createExcel">
+		<action name="ExportReserveListAction" class="downloadAction" method="exportReserveListExcel">
 			<result name="success" type="chain">DownloadAction</result>
 		</action>
 	</package>
@@ -192,10 +214,12 @@
 		<global-results>
 			<result name="login">/login.jsp</result>
 		</global-results>
+		
+		
 		<!-- 预约和取消预约的action采用submit中使用submit方式 -->
 		<action name="AjaxReserveLecture" class="lectureAction" method="reserveLecture">
 			<result name="success" type="json">
-				<!-- <param name="root">result</param> -->
+				<param name="root">resultMap</param> 
 			</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 
@@ -204,7 +228,7 @@
 		<action name="AjaxCancelReserveLecture" class="lectureAction"
 			method="cancelReserveLecture">
 			<result name="success" type="json">
-				<!-- <param name="root">result</param> -->
+				<param name="root">resultMap</param> 
 			</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
 
@@ -235,6 +259,43 @@
 				<param name="root">pageBean</param>
 
 			</result>
+
+		</action>
+		
+			<action name="AjaxQueryReserveList" class="lectureAction"
+			method="queryReserveList">
+			<result name="success" type="json">
+				<param name="root">pageBean</param>
+			</result>
+
+		</action>
+		
+		<action name="AjaxAddLectureAction" class="lectureAction" method="addLecture">
+			<result name="success" type="json">
+				<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+
+
+		</action>
+
+		<action name="AjaxUpdateLectureAction" class="lectureAction"
+			method="updateLecture">
+			<result name="success" type="json">
+				<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+
+
+		</action>
+
+		<action name="AjaxDeleteLectureAction" class="lectureAction"
+			method="deleteLecture">
+		<result name="success" type="json">
+				<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+
 
 		</action>
 	</package>
