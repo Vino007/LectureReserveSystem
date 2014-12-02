@@ -29,6 +29,16 @@ public class ReserveService extends BaseService {
 		
 		return reserveDao.queryPageWithCondition(pageNo, pageRecord, condition, hql_count, hql_list);
 	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public PageBean<ReserveInfo> queryAttenceList(int pageNo,int pageRecord,long id){
+		String hql_count="select count(*) from ReserveInfo r where r.lectureId=? and r.attence=1";
+		String hql_list="from ReserveInfo r where r.lectureId=? and r.attence=1";
+		condition = new ArrayList<Object>();
+		condition.add(id);
+		
+		return reserveDao.queryPageWithCondition(pageNo, pageRecord, condition, hql_count, hql_list);
+	}
 
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void updateCurrentPeople(ReserveInfo reserveInfo) {

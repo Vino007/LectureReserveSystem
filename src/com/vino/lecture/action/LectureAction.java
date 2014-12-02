@@ -127,6 +127,17 @@ public class LectureAction extends BaseAction {
 		pageBean=reserveService.queryReserveList(pageBean.getPageNo(), 10, reserveInfo.getLectureId());
 		return SUCCESS;
 	}
+	/**
+	 * Í¨¹ýlectureId²éÑ¯¿¼ÇÚ
+	 * @return
+	 * @throws Exception
+	 */
+	public String queryAttenceList() throws Exception {
+		
+		pageBean=reserveService.queryAttenceList(pageBean.getPageNo(), 5, reserveInfo.getLectureId());
+		return SUCCESS;
+	}
+
 
 
 	/**

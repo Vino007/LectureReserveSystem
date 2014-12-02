@@ -8,11 +8,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.vino.lecture.service.ExcelService;
 
 /**
  * 上传文件
@@ -24,18 +29,48 @@ public class FileUploadAction extends ActionSupport{
 	/**
 	 * 
 	 */
+	
+	private long lectureId;
+	private Map<String, String> resultMap=new HashMap<String, String>();
+	public Map<String, String> getResultMap() {
+		return resultMap;
+	}
+	public void setResultMap(Map<String, String> resultMap) {
+		this.resultMap = resultMap;
+	}
+	public long getLectureId() {
+		return lectureId;
+	}
+	public void setLectureId(long lectureId) {
+		this.lectureId = lectureId;
+	}
+	@Resource
+	private ExcelService excelService;
+	public ExcelService getExcelService() {
+		return excelService;
+	}
+	public void setExcelService(ExcelService excelService) {
+		this.excelService = excelService;
+	}
+	
+	
 	private static final long serialVersionUID = 1L;
 	private File file;
 	private String fileFileName;
 	private String fileContentType;
 	private String description;
 	private String uploadDir;
+	private String newFileName;
+	
+	/**
+	 * 先执行上传，然后通过import导入数据库，上传的文件统一命名为attenceinfo.xls
+	 */
 	@Override
 	public String execute() throws Exception {
 		// TODO Auto-generated method stub
 		String path=ServletActionContext.getServletContext().getRealPath(uploadDir);
 		System.out.println(path);
-		String newFileName=null;
+		
 		long now=new Date().getTime();
 		File dir=new File(path);
 		if(!dir.exists())
@@ -86,6 +121,21 @@ public class FileUploadAction extends ActionSupport{
 			
 		return SUCCESS;
 	}
+	
+	public String importAttenceListExcel() throws Exception{
+		try{
+		excelService.importExcel(newFileName,lectureId);
+		resultMap.put("result", "success");
+		}catch(Exception e){
+			e.printStackTrace();
+			resultMap.put("result", "fail");
+			System.out.println("import出错");
+		}
+		return SUCCESS;
+	}
+	
+	
+	
 	public File getFile() {
 		return file;
 	}

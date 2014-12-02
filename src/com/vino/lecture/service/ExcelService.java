@@ -47,7 +47,38 @@ public class ExcelService extends BaseService{
 		String title=(String) lectureDao.query("select l.title from LectureInfo l where l.id=?", condition);
 		String[] heads={"学号","姓名"};		
 		try {
-			createExcel(new FileOutputStream( ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/reserveinfo.xls")),
+			createExcel(new FileOutputStream( ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/export.xls")),
+					title, heads, reserveInfos);
+		System.out.println(ServletActionContext.getServletContext().getContextPath());
+		
+		} catch (RowsExceededException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (WriteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("文件路径错误");
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
+	public void createAttenceListExcel(long id){
+		String hql="from ReserveInfo r where r.lectureId=? and r.attence=1";
+		condition=new ArrayList<Object>();
+		condition.add(id);
+		List<ReserveInfo> reserveInfos=reserveDao.queryWithCondition(hql, condition);
+		//查询讲座名
+		String title=(String) lectureDao.query("select l.title from LectureInfo l where l.id=?", condition);
+		String[] heads={"学号","姓名"};		
+		try {
+			createExcel(new FileOutputStream( ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/export.xls")),
 					title, heads, reserveInfos);
 		System.out.println(ServletActionContext.getServletContext().getContextPath());
 		
@@ -67,18 +98,19 @@ public class ExcelService extends BaseService{
 		}
 	}
 	/**
-	 * 将excel输入到输出流中
+	 * 导入excel
 	 */
-	public void importExcel(){
+	@Transactional(propagation=Propagation.REQUIRED,readOnly=false)
+	public void importExcel(String filename,long id){
 		try {
-			readExcel(new FileInputStream(ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/reserveinfo.xls")));
+			readExcel(new FileInputStream(ServletActionContext.getServletContext().getRealPath("/WEB-INF/upload/"+filename)),id);
 		} catch (BiffException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void createExcel(OutputStream os,String title,String[] heads,List<ReserveInfo> reserveInfos) throws IOException,
+	public void createExcel(OutputStream os,String title,String[] heads,List<ReserveInfo> list) throws IOException,
 			RowsExceededException, WriteException {
 		// 创建工作区
 		WritableWorkbook workbook = Workbook.createWorkbook(os);
@@ -99,30 +131,45 @@ public class ExcelService extends BaseService{
 			sheet.addCell(new Label(i,1,heads[i]));
 		}
 		//添加字段内容
-		for(int i=0;i<reserveInfos.size();i++){
-			sheet.addCell(new Label(0, i+2, reserveInfos.get(i).getUsername()));
-			sheet.addCell(new Label(1, i+2, reserveInfos.get(i).getName()));
+		for(int i=0;i<list.size();i++){
+			sheet.addCell(new Label(0, i+2, list.get(i).getUsername()));
+			sheet.addCell(new Label(1, i+2, list.get(i).getName()));
 		}
 		// 将内容写到输出流中，然后关闭工作区，最后关闭输出流
 		workbook.write();
 		workbook.close();
 		os.close();
 	}
+	
+	
+	
+	
 	//导入学生名单 学号+姓名
-	public void readExcel(InputStream is) throws BiffException, IOException{
+	//第三行开始为 有效数据
+	
+	public void readExcel(InputStream is,long id) throws BiffException, IOException{
 		Workbook workbook=Workbook.getWorkbook(is);
 		if(workbook.getNumberOfSheets()>0){
 			Sheet sheet=workbook.getSheet(0);
 			Cell[] usernameCells=sheet.getColumn(0);
 			Cell[] nameCells=sheet.getColumn(1);
 			for(int i=2;i<nameCells.length;i++){
-				
+				String hql="update ReserveInfo r set r.attence=1 where r.username=? and r.name=? and lectureId=?";
+				List<Object> condition=new ArrayList<Object>();
+				condition.add(usernameCells[i].getContents());
+				condition.add(nameCells[i].getContents());
+				condition.add(id);
+				reserveDao.updateWithCondition(hql, condition);			
 				System.out.println(nameCells[i].getContents());
+				System.out.println(id);
 			}
 			workbook.close();
 			is.close();
 				
 		}
+	}
+	public void importDB(){
+		
 	}
 
 }

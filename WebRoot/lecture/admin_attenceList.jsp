@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
-
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,7 +17,31 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
+<style type="text/css">
+.table-full {
+	width: 100%;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100dx;
+}
 
+.center {
+	width: auto;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100dx;
+}
+
+body {
+	padding-top: 70px;
+}
+
+.text-center {
+	text-align: center;
+}
+</style>
 </head>
 <body>
 	<!-- 导航条 -->
@@ -32,7 +56,7 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">讲座预约系统</a>
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/adminLectureManage.jsp">讲座预约系统</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -82,7 +106,7 @@
 	<!-- 侧边栏 -->
 
 	<!-- 加上这句整齐！ -->
-	<div class="container-fluid">
+<div class="container-fluid">
 
 		<div class="row">
 			<div class="col-md-2 sidebar">
@@ -90,13 +114,13 @@
 					<%-- <li class="active"><a href="#">Overview <span
 							class="sr-only">(current)</span></a></li> --%>
 					
-					<li><a href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
+						<li><a href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
 					<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
 					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
 					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
-					
+					<li><a href="#">考勤信息查询</a></li>
 					<!-- 上传excel，单个修改考勤，查询考勤 -->
-					<li><a href="AdminManageAttenceAction">考勤信息管理</a></li>
+					<li><a href="#">考勤信息管理</a></li>
 				</ul>
 				
 				<ul class="nav nav-sidebar">
@@ -114,24 +138,114 @@
 				</ul>
 				
 			</div>
-			<!--tab的内容  -->
-			
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<div class="tab-content">
-					<div class="tab-pane active" id="div0"></div>
-					<div class="tab-pane" id="div1"></div>
-					<div class="tab-pane" id="div2">div2</div>
-				</div>
-			</div>
-		</div>
-		</div>
-
-		<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
-		<script src="js/jquery-2.1.1.js"></script>
-		<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
-		<script src="js/bootstrap.min.js"></script>
-		<!-- 异步载入页面 -->
 		
+				<table id="table" class="table table-bordered table-hover table-full "
+					contenteditable="false">
+					<thead>
+						<tr class="success">
+						<th style="text-align: center">学号</th>
+						<th style="text-align: center">姓名</th>					
+						</tr>
+					</thead>
+					<tbody id="tbody">
+						<s:iterator value="pageBean.beanList" status="status">
+							<tr>
+								
+								<td >${username}</td>
+								<td >${name}</td>
+							<tr>
+						</s:iterator>
+					</tbody>
+						
+				</table>
+					<!-- 分页 -->
+				<nav>
+						<ul class="pagination center">
+						<!-- <li><a href="#">&laquo;</a></li> -->
+						<%-- <li><s:a href="QueryReservedLectureAction?pageBean.pageNo=1">首页</s:a></li> --%>
+						
+						<li id="firstPage"><s:a href="#">首页</s:a></li>
+					
+							<li id="prePage"><s:a
+									href="#">上一页</s:a></li>					
+							<li id="nextPage"><s:a
+									href="#">下一页</s:a></li>						
+						<li id="lastPage"><s:a
+								href="#">尾页</s:a>
+						</li>
+						<!-- 
+						<li><a href="#">&raquo;</a></li> -->
+					</ul>
+				</nav>
+				<p class="text-center">第<span id="pageNo">${pageBean.pageNo}</span>页/共<span id="totalPage">${pageBean.totalPage}</span>页</p>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+	<script src="${pageContext.request.contextPath}/js/jquery-2.1.1.js"></script>
+	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/admin_myajax.js"></script>
+	<script>
+		//首页
+		$(document).ready(function() {
+			$("#firstPage").click(function() {
+				$.get("ajax/AjaxQueryReserveList", {
+					"pageBean.pageNo" : "1"
+				}, function(data, status) {
+					queryReserveListCallback(data, status);
+				});
+			});
+		});
+
+		//上一页 Number()将字符串转型成整型
+		$(document).ready(function() {
+			$("#prePage").click(function() {
+				if (Number($("#pageNo").text()) > 1)
+					var nextPage = Number($("#pageNo").text()) - 1;
+				else
+					var nextPage = 1;
+				$.get("ajax/AjaxQueryReserveList", {
+					"pageBean.pageNo" : nextPage
+				}, function(data, status) {
+					queryReserveListCallback(data, status);
+
+				});
+			});
+		});
+
+		//下一页 Number()将字符串转型成整型
+	
+		$(document).ready(function() {
+			$("#nextPage").click(function() {
+				if (Number($("#pageNo").text()) < Number($("#totalPage").text()))
+					var nextPage = Number($("#pageNo").text()) + 1;//加页
+				else
+					var nextPage = Number($("#pageNo").text());//保持不变
+				$.get("ajax/AjaxQueryReserveList",{
+					"pageBean.pageNo" : nextPage
+					},function(data,status) {
+						queryReserveListCallback(data,status);
+					});
+				});
+		 });
+
+		//尾页
+		$(document).ready(function() {
+			$("#lastPage").click(function() {
+				$.get("ajax/AjaxQueryReserveList", {
+					"pageBean.pageNo" : $("#totalPage").text()
+				}, function(data, status) {
+					queryReserveListCallback(data, status);
+
+				});
+			});
+		});
+	</script>
+
 
 </body>
 </html>

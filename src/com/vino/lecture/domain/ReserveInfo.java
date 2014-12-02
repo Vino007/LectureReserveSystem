@@ -8,6 +8,15 @@ public class ReserveInfo {
 	private String name;
 	private String username;
 	private long lectureId;
+	private int attence;
+	public int getAttence() {
+		return attence;
+	}
+
+	public void setAttence(int attence) {
+		this.attence = attence;
+	}
+
 	public long getId() {
 		return id;
 	}

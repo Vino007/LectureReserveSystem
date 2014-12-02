@@ -19,8 +19,16 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
- 
+
 <style type="text/css">
+.table-full {
+	width: 100%;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100dx;
+}
+
 .center {
 	width: auto;
 	display: table;
@@ -51,7 +59,7 @@ body {
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">讲座预约系统</a>
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/adminLectureManage.jsp">讲座预约系统</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -109,11 +117,12 @@ body {
 					<%-- <li class="active"><a href="#">Overview <span
 							class="sr-only">(current)</span></a></li> --%>
 
-						<li><a href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
-				<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
+					<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
 					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
 					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
-			
+					
 					<!-- 上传excel，单个修改考勤，查询考勤 -->
 					<li><a href="#">考勤信息管理</a></li>
 				</ul>
@@ -135,65 +144,116 @@ body {
 
 			</div>
 
-
-<!-- 右侧 -->
-
-			<div class="col-sm-9 col-sm-offset-3 col-md-5 col-md-offset-2 main">
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				<div id="myAlert" class="alert alert-success" hidden="true">
-					<a href="#" class="close"  data-dismiss="alert">&times;</a> 
-					<strong id="alertMsg">添加成功！</strong>
+					<a href="#" class="close" data-dismiss="alert">&times;</a> <strong
+						id="alertMsg">添加成功！</strong>
 				</div>
-				<s:form id="addForm"
-					action="AjaxAddLectureAction" namespace="/ajax"
-					method="post" role="form">
-					<div class="form-group">
-						<label for="title">讲座主题</label> <input type="text"
-							class="form-control" id="title" placeholder="请输入讲座主题"
-							name="lectureInfo.title"  required>
-					</div>
-					<div class="form-group">
-						<label for="lecturer">主讲人</label> <input type="text"
-							class="form-control " id="lecturer" placeholder="请输入主讲人"
-							name="lectureInfo.lecturer" required>
-					</div>
-					<div class="form-group">
-						<!-- 输出的时间为2014-11-30T08:00 -->
-						<label for="time">讲座时间</label> <input type="datetime-local"
-							class="form-control" id="time" placeholder="请严格按照如下格式输入YYYY.MM.DD HH:ss(24小时制)"
-							name="lectureInfo.time" required>
-					</div>
-					<div class="form-group">
-						<label for="address">讲座地点</label> <input type="text"
-							class="form-control" id="address" placeholder="请输入讲座地点"
-							name="lectureInfo.address" required>
-					</div>
-					<div class="form-group">
-						<label for="maxPeople">最大人数</label> <input type="number"
-							class="form-control" id="maxPeople" placeholder="请输入讲座最大允许的人数(10-500)之间"
-							name="lectureInfo.maxPeople" required  min="10" max="500">
-					</div>
-					<div class="form-group">
-						<label for="content">讲座介绍</label> <textarea  
-							class="form-control" id="content" placeholder="请输入讲座简介"
-							name="lectureInfo.content" required></textarea>
-					</div>					
-					<button type="submit" class="btn btn-default" id="submit1">提交</button>
-				</s:form>
-	
+				<!-- 放张图表示 -->
+				<div class="alert alert-error" hidden="true">
+					<a href="#" class="close" data-dismiss="alert">&times;</a> <strong
+						id="alertMsg">考勤excel请严格按照如下格式:有且只有一列,用户名位于Excel第一列</strong>
+				</div>
+				<table id="table" class="table table-hover table-full "
+					contenteditable="false">
+					<thead>
+						<tr class="success">
+							<th>标题</th>
+							<th>主讲人</th>
+							<th>时间</th>
+							<th>地点</th>
+							<th>已预约人数</th>
+							<th>最大允许人数</th>
+							<th>详情</th>
+							<th colspan="4" style="text-align: center">操作</th>
+						</tr>
+					</thead>
+					<tbody id="tbody">
+						<s:iterator value="pageBean.beanList" status="status">
+							<tr class="tr">
+								<td valign="bottom">${title}</td>
+								<td valign="bottom">${lecturer}</td>
+								<td valign="bottom">${time}</td>
+								<td valign="bottom">${address}</td>
+								<td valign="bottom">${currentPeople}</td>
+								<td valign="bottom">${maxPeople}</td>
+								<td valign="bottom"><a href="#" data-container="body"
+									title="讲座详情" data-toggle="popover" data-placement="right"
+									data-delay="100" data-content="${content}">详情</a></td>
 
+
+								<!-- theme=simple 解决了 submit标签自动换行问题 -->
+								<td>
+									<button
+										onclick="javascript:window.location.href='QueryAttenceListAction?reserveInfo.lectureId=${id}'"
+										type="button" class="btn btn-default center btn-sm">查看考勤</button>
+								</td>
+
+								<td><s:form id="ajaxForm" action="LectureAction"
+										method="post" namespace="/ajax" role="form" theme="simple">
+										<!-- 此id为lectureInfo的id -->
+										<s:hidden name="lectureInfo.id" value="%{id}"></s:hidden>
+										<button id="delete_btn" type="submit"
+											class="btn btn-default btn-sm">修改考勤</button>
+									</s:form></td>
+
+								<!-- window.location.href="你所要跳转的页面"; -->
+							
+								<td><s:form action="AttenceFileUploadAction" method="post"
+										enctype="multipart/form-data" namespace="/upload"
+										theme="simple">
+										<input type="hidden" name="lectureId" value="${id}">
+										<input type="file" name="file" class="btn btn-default btn-xs">
+										<button type="submit" class="btn btn-default btn-xs">上传考勤</button>
+									</s:form></td>
+								<td>
+									<button
+										onclick="javascript:window.location.href='ExportAttenceListAction?lectureId=${id}'"
+										type="button" class="btn btn-default btn-sm center">导出考勤</button>
+								</td>
+							<tr>
+						</s:iterator>
+					</tbody>
+
+				</table>
+				<!-- 分页 -->
+				<nav>
+					<ul class="pagination center">
+						<li><s:a href="QueryAttenceListAction?pageBean.pageNo=1">首页</s:a></li>
+						<s:if test="pageBean.pageNo > 1 ">
+							<li><s:a
+									href="QueryAttenceListAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
+						</s:if>
+						<s:else>
+							<li><s:a href="#">上一页</s:a></li>
+						</s:else>
+						<s:if test="pageBean.pageNo <pageBean.totalPage">
+							<li><s:a
+									href="QueryAttenceListAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
+						</s:if>
+						<s:else>
+							<li><s:a href="#">下一页</s:a></li>
+						</s:else>
+						<li><s:a
+								href="QueryAttenceListAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
+						</li>
+
+					</ul>
+				</nav>
+				<p class="text-center">第${pageBean.pageNo}页/共${pageBean.totalPage}页</p>
 			</div>
 		</div>
 	</div>
 
 
-	       	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
 	<script src="${pageContext.request.contextPath}/js/jquery-2.1.1.js"></script>
 	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
-	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>	
+	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/jquery.form.js"></script>
 	<script>
 		$(document).ready(function(){		
-		$("#addForm").submit(function(){					
+		$("form").submit(function(){					
 			$(this).ajaxSubmit(function(data){
 				alert(data.result);
 			//	
@@ -203,7 +263,7 @@ body {
 				else 
 					$("#alertMsg").text("添加失败，请重新尝试");
 					//重置讲座表单
-					document.getElementById("addForm").reset();
+					
 					$("#myAlert").show();
 			});
 			 return false;//阻止表单默认提交 
@@ -211,5 +271,12 @@ body {
 			});
 		});
 	</script>
+	<!-- popover弹出框需要激活才能使用！！！原因是它不是单纯的css插件 -->
+	<script type="text/javascript">
+		$(function() {
+			$("[data-toggle='popover']").popover();
+		});
+	</script>
+
 </body>
 </html>

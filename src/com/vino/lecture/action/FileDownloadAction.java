@@ -54,9 +54,14 @@ public class FileDownloadAction extends ActionSupport {
 	public String exportReserveListExcel() throws Exception {
 		// TODO Auto-generated method stub
 		excelService.createReserveInfoExcel(lectureId);
-		excelService.importExcel();
+	
 		return SUCCESS;
 	}
-
+	public String exportAttenceListExcel() throws Exception {
+		// TODO Auto-generated method stub
+		excelService.createAttenceListExcel(lectureId);
+		//excelService.importExcel();
+		return SUCCESS;
+	}
 
 }

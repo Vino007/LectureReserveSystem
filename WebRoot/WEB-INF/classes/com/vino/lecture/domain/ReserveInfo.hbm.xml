@@ -10,5 +10,6 @@
     		<property name="name" column="name"></property>
     		<property name="username" column="username"></property>
     		<property name="lectureId" column="lectureId"></property>
+    		<property name="attence" column="attence"></property>
     	</class>
     </hibernate-mapping>

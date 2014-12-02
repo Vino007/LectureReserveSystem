@@ -90,6 +90,12 @@
 			<result name="login">/login.jsp</result>
 
 		</action>
+				<action name="AdminManageAttenceAction" class="lectureAction"
+			method="queryAllLecture">
+			<result name="success">/lecture/admin_manageAttence.jsp</result>
+			<result name="login">/login.jsp</result>
+
+		</action>
 		<!-- 查询可预约的讲座 -->
 		<action name="QueryAvailableLectureAction" class="lectureAction"
 			method="queryAvailableLecture">
@@ -116,6 +122,14 @@
 		<action name="QueryReserveListAction" class="lectureAction"
 			method="queryReserveList">
 			<result name="success">/lecture/admin_reserveList.jsp</result>
+			<result name="login">/login.jsp</result>
+
+		</action>
+		
+		<!-- 查询考勤清单 -->
+		<action name="QueryAttenceListAction" class="lectureAction"
+			method="queryAttenceList">
+			<result name="success">/lecture/admin_attenceList.jsp</result>
 			<result name="login">/login.jsp</result>
 
 		</action>
@@ -169,7 +183,7 @@
 		</action>
 		<action name="DownloadAction" class="downloadAction">
 			<!-- 指定文件的下载路径，默认是webroot为根目录 -->
-			<param name="inputPath">/WEB-INF/download/reserveinfo.xls</param>
+			<param name="inputPath">/WEB-INF/download/export.xls</param>
 			<result name="success" type="stream">
 				<param name="contentType">application/x-excel</param>
 				<param name="inputName">targetFile</param>
@@ -180,14 +194,35 @@
 		<action name="ExportReserveListAction" class="downloadAction" method="exportReserveListExcel">
 			<result name="success" type="chain">DownloadAction</result>
 		</action>
+		
+		<!-- 创建excel并转发到download action -->
+		<action name="ExportAttenceListAction" class="downloadAction" method="exportAttenceListExcel">
+			<result name="success" type="chain">DownloadAction</result>
+		</action>
 	</package>
 
 
 	<!-- 上传文件 -->
 	<package name="upload" extends="authorityCheck" namespace="/upload">
-		<action name="FileUploadAction" class="fileUploadAction">
+	
+	<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
+		<interceptors>
+			<interceptor name="json"
+				class="org.apache.struts2.json.JSONInterceptor" />		
+		</interceptors>
+		
+		
+		<action name="AttenceFileUploadAction" class="fileUploadAction">
 			<param name="uploadDir">/WEB-INF/upload/</param>
-			<result name="success">/download.jsp</result>
+			<result name="success" type="chain">ImportAttenceListAction</result>
+			<result name="input">/login.jsp</result>
+		</action>
+		<action name="ImportAttenceListAction" class="fileUploadAction" method="importAttenceListExcel">			
+			<result name="success" type="json">
+			<param name="root">resultMap</param> 
+			</result>
 			<result name="input">/login.jsp</result>
 		</action>
 	</package>

@@ -9,9 +9,10 @@
 </head>
 <body>
 <a href="ExportReserveListAction?id=1">下载</a><br>
-<a href="CreateExcelAction">导出预约名单</a><br>
+<a href="ExportReserveListAction?id=1">导出预约名单</a><br>
 	<s:form action="FileUploadAction" method="post" enctype="multipart/form-data" namespace="/upload">
 		<s:file name="file" lable="请选择上传的文件"></s:file>
+		<s:textarea name="lectureId" value="107"></s:textarea>
 		<s:textarea name="description" cols="50" rows="10" label="文件描述"></s:textarea>
 		<s:submit value="上传"></s:submit>
 	</s:form>
