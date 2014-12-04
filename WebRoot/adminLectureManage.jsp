@@ -96,12 +96,12 @@
 					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
 					
 					<!-- 上传excel，单个修改考勤，查询考勤 -->
-					<li><a href="AdminManageAttenceAction">考勤信息管理</a></li>
+					<li><a href="AdminManageAttenceAction?pageBean.pageNo=1">考勤信息管理</a></li>
 				</ul>
 				
 				<ul class="nav nav-sidebar">
 					<!-- 用户管理中有批量导入用户，用户增删改查 -->
-					<li><a href="#">用户管理</a></li>
+					<li><a href="PageQueryUserAction?pageBean.pageNo=1">用户管理</a></li>
 					<!-- 基本信息+已听讲座次数， -->
 					<li><a href="#">用户信息查询</a></li>
 					<li><a href="#">待定</a></li>

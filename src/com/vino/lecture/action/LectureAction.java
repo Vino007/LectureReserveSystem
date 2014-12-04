@@ -1,11 +1,14 @@
 package com.vino.lecture.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.vino.lecture.domain.LectureInfo;
 import com.vino.lecture.domain.PageBean;
 import com.vino.lecture.domain.ReserveInfo;
+import com.vino.lecture.exception.UserNoExistException;
 
 public class LectureAction extends BaseAction {
 	/**
@@ -16,6 +19,7 @@ public class LectureAction extends BaseAction {
 	private List<LectureInfo> lectureInfos;// 讲座信息列表
 	private LectureInfo lectureInfo;
 	private ReserveInfo reserveInfo;// 注入，预定信息
+	private List<Long> ids=new ArrayList<Long>(); //id列表，批量
 	//存放ajax请求的结果
 	private Map<String,String> resultMap=new HashMap<String, String>();
 	public Map<String, String> getResultMap() {
@@ -24,6 +28,15 @@ public class LectureAction extends BaseAction {
 
 	public void setResultMap(Map<String, String> resultMap) {
 		this.resultMap = resultMap;
+	}
+
+
+	public List<Long> getIds() {
+		return ids;
+	}
+
+	public void setIds(List<Long> ids) {
+		this.ids = ids;
 	}
 
 
@@ -134,7 +147,7 @@ public class LectureAction extends BaseAction {
 	 */
 	public String queryAttenceList() throws Exception {
 		
-		pageBean=reserveService.queryAttenceList(pageBean.getPageNo(), 5, reserveInfo.getLectureId());
+		pageBean=reserveService.queryAttenceList(pageBean.getPageNo(), 10, reserveInfo.getLectureId());
 		return SUCCESS;
 	}
 
@@ -200,6 +213,22 @@ public class LectureAction extends BaseAction {
 		return SUCCESS;
 
 	}
+	
+	
+	public String deleteLectures() throws Exception {
+	//	Map request = (Map) ActionContext.getContext().get("request");
+		try {
+			lectureService.deleteLectures(ids);
+		//	request.put("Result", "success");
+			resultMap.put("result","delete_success");
+		} catch (RuntimeException e) {
+		//	request.put("Result", "fail");
+			resultMap.put("result","delete_fail");
+		}
+		return SUCCESS;
+
+	}
+
 
 	/**
 	 * 预定讲座
@@ -217,7 +246,7 @@ public class LectureAction extends BaseAction {
 				
 				resultMap.put("result","reserve_success");
 		
-				reserveService.updateCurrentPeople(reserveInfo);// 更新现有人数
+				reserveService.updateCurrentPeople(reserveInfo.getLectureId());// 更新现有人数
 			} else if (reserveService.reserveLecture(reserveInfo).equals(
 					"repeat")) {
 				addActionMessage("已经预约过了");
@@ -249,7 +278,7 @@ public class LectureAction extends BaseAction {
 					"success")) {
 				addActionMessage("取消预约成功");		
 				resultMap.put("result", "cancel_success");
-				reserveService.updateCurrentPeople(reserveInfo);// 更新现有人数
+				reserveService.updateCurrentPeople(reserveInfo.getLectureId());// 更新现有人数
 			} else if (reserveService.cancelReserveLecture(reserveInfo).equals(
 					"alread_cancel")) {
 				addActionMessage("已经取消了");
@@ -259,6 +288,59 @@ public class LectureAction extends BaseAction {
 		} catch (RuntimeException e) {
 			addActionMessage("取消预约失败");		
 			resultMap.put("result", "fail");
+		}
+		return SUCCESS;
+	}
+	/**
+	 * 删除多个考勤
+	 * @return
+	 * @throws Exception
+	 */
+	public String deleteAttences() throws Exception {
+	//	Map request = (Map) ActionContext.getContext().get("request");
+		try {
+			reserveService.deleteAttences(ids);
+		//	request.put("Result", "success");
+			resultMap.put("result","delete_success");
+		} catch (RuntimeException e) {
+		//	request.put("Result", "fail");
+			resultMap.put("result","delete_fail");
+		}
+		return SUCCESS;
+
+	}
+	/**
+	 * 添加考勤
+	 * @return
+	 * @throws Exception
+	 */
+	public String addAttence() throws Exception {
+
+
+		
+		try {
+			reserveService.addAttence(reserveInfo.getLectureId(), reserveInfo.getUsername());
+			reserveService.updateCurrentPeople(reserveInfo.getLectureId());
+			resultMap.put("result","add_success");
+	
+		} catch(UserNoExistException e){		
+			resultMap.put("result","user_no_exist");
+			
+		}catch (RuntimeException e) {
+			e.printStackTrace();
+			resultMap.put("result","add_fail");
+		}
+		System.out.println(resultMap.get("result"));
+		return SUCCESS;
+	}
+	public String addReserve() throws Exception {	
+		try {
+			reserveService.addReserve(user,reserveInfo.getLectureId());
+			resultMap.put("result","add_success");
+	
+		} catch (RuntimeException e) {
+
+			resultMap.put("result","add_fail");
 		}
 		return SUCCESS;
 	}

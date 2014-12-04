@@ -9,6 +9,24 @@ public class ReserveInfo {
 	private String username;
 	private long lectureId;
 	private int attence;
+	private String major;
+	private String grade;
+	public String getMajor() {
+		return major;
+	}
+
+	public void setMajor(String major) {
+		this.major = major;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
 	public int getAttence() {
 		return attence;
 	}

@@ -11,6 +11,8 @@ public class PageBean<T> {
 	private int pageNo;//当前页数
 	private int pageRecord; //每页记录数
 	private List<T> beanList;//当前页的记录
+//	private int firstPage;
+//	private int lastPage;
 	/**
 	 * 初始化page设定
 	 */
@@ -19,6 +21,28 @@ public class PageBean<T> {
 		pageNo=1;
 		pageRecord=5;
 	}
+	public int getFirstPage() {
+	//	int totalPage=getTotalPage();
+		
+		return 1+10*(pageNo/10);
+	/*	if(pageNo+10>totalPage)  //另一种分页显示方式
+			return totalPage-9;
+	
+		return 1;*/
+	}
+	
+	public int getLastPage() {
+		int totalPage=getTotalPage();
+		if(getFirstPage()+9>totalPage)
+			return totalPage;
+		return getFirstPage()+9;
+		
+		/*if(getFirstPage()+10>totalPage) //另一种分页显示方式
+			return totalPage;
+		
+		return 10;*/
+	}
+	
 	public int getTotalPage() {
 		int totalPage=totalRecord/pageRecord;
 		return totalRecord%pageRecord==0?totalPage:totalPage+1;

@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vino.lecture.domain.LectureInfo;
 import com.vino.lecture.domain.PageBean;
 import com.vino.lecture.domain.ReserveInfo;
+import com.vino.lecture.domain.User;
+import com.vino.lecture.exception.UserNoExistException;
 
 @Service
 public class ReserveService extends BaseService {
@@ -41,19 +44,107 @@ public class ReserveService extends BaseService {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public void updateCurrentPeople(ReserveInfo reserveInfo) {
+	public void updateCurrentPeople(long lectureId) {
 		// reserveDao.updateCurrentPeople(reserveInfo);
 		String hql = "select count(*) from ReserveInfo r where r.lectureId=?";
-		condition.add(reserveInfo.getLectureId());
+		
+		condition.add(lectureId);
 		long currentPeople = (long) reserveDao.query(hql, condition);
 		condition.clear();
 		hql = "update LectureInfo l set l.currentPeople=? where l.id=?";
 		condition.add((int) currentPeople);
-		condition.add(reserveInfo.getLectureId());
+		condition.add(lectureId);
 		reserveDao.updateWithCondition(hql, condition);
 		condition.clear();
 	}
-
+	/**
+	 * 删除考勤，即将attence置0
+	 * @param ids reserveinfo 的id集合
+	 * @throws RuntimeException
+	 */
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void deleteAttences(List<Long> ids) throws RuntimeException {
+		String hql="update ReserveInfo r set r.attence=0 where r.id=?";
+		condition=new ArrayList<Object>();
+		try {
+			for(Long id:ids){
+				if(id!=null){
+			condition.clear();
+			condition.add(id);
+			reserveDao.updateWithCondition(hql, condition);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+	}
+	/**
+	 * 通过lectureID 和username添加考勤
+	 * @param id lectureID
+	 * @param username
+	 * @throws RuntimeException
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void addAttence(long id,String username) throws UserNoExistException,RuntimeException {
+		String hql=null;
+	
+			hql="from User u where u.username=?";
+			condition=new ArrayList<Object>();
+			condition.add(username);
+			User user=(User) userDao.query(hql, condition);
+			if(user==null){
+				System.out.println("用户不存在");
+				throw new UserNoExistException();
+			
+			}
+			condition.clear();
+			condition.add(id);
+			condition.add(username);
+		try {	
+		   hql="from ReserveInfo r where r.lectureId=? and r.username=? ";
+			if(reserveDao.queryWithCondition(hql,condition).size()==0){
+				System.out.println("该用户未预约，新建预约并添加考勤");
+				ReserveInfo reserveInfo=new ReserveInfo();
+				reserveInfo.setLectureId(id);
+				reserveInfo.setUsername(username);
+				reserveInfo.setName(user.getName());
+				reserveInfo.setAttence(1);
+				reserveDao.add(reserveInfo);//添加预约信息并添加考勤
+				condition.clear();
+			}else{
+				System.out.println("用户已经预约，直接添加考勤");
+				 hql="update ReserveInfo r set r.attence=1 where r.lectureId=? and r.username=?";				
+				 reserveDao.updateWithCondition(hql, condition);
+				 condition.clear();
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+	}
+	
+	/**
+	 * 管理端添加预约
+	 * @param user
+	 * @param lectureId
+	 * @throws RuntimeException
+	 */
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void addReserve(User user,long lectureId) throws RuntimeException {
+		try {
+			ReserveInfo reserveInfo=new ReserveInfo();
+			reserveInfo.setLectureId(lectureId);
+			reserveInfo.setUsername(user.getUsername());
+			reserveInfo.setName(user.getName());
+			reserveDao.add(reserveInfo);
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
+	}
+	
+/*********************************客户端的功能***********************************************************/
 	/**
 	 * 预定讲座，先判断该用户是否已经预约过了，再进行预约
 	 * 

@@ -66,14 +66,16 @@ body {
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
+					<li class="active"><a href="#">新增讲座</a></li>
+					<li><a href="#">讲座管理</a></li>
+					<li><a href="#">考勤管理</a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+						data-toggle="dropdown">用户管理 <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
+							<li><a href="#">新增管理员</a></li>
+							<li><a href="#">新增用户</a></li>
+							<li><a href="#">修改用户信息</a></li>
+							<li><a href="#">修改管理员密码</a></li>
 							<li class="divider"></li>
 							<li><a href="#">Separated link</a></li>
 							<li class="divider"></li>
@@ -87,7 +89,7 @@ body {
 					<button type="submit" class="btn btn-default">Submit</button>
 				</form>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Link</a></li>
+					<li><a href="#"></a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
@@ -119,17 +121,17 @@ body {
 
 					<li><a
 						href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
-					<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
+					<li><a href="AdminQueryAllLectureAction?pageBean.pageNo=1">讲座管理</a></li>
 					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
 					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
 					
 					<!-- 上传excel，单个修改考勤，查询考勤 -->
-					<li><a href="#">考勤信息管理</a></li>
+					<li><a href="AdminManageAttenceAction?pageBean.pageNo=1">考勤信息管理</a></li>
 				</ul>
 
 				<ul class="nav nav-sidebar">
 					<!-- 用户管理中有批量导入用户，用户增删改查 -->
-					<li><a href="#">用户管理</a></li>
+					<li><a href="PageQueryUserAction?pageBean.pageNo=1">用户管理</a></li>
 					<!-- 基本信息+已听讲座次数， -->
 					<li><a href="#">用户信息查询</a></li>
 					<li><a href="#">待定</a></li>
@@ -161,11 +163,9 @@ body {
 							<th>标题</th>
 							<th>主讲人</th>
 							<th>时间</th>
-							<th>地点</th>
-							<th>已预约人数</th>
-							<th>最大允许人数</th>
+							<th>地点</th>					
 							<th>详情</th>
-							<th colspan="4" style="text-align: center">操作</th>
+							<th colspan="5" style="text-align: center">操作</th>
 						</tr>
 					</thead>
 					<tbody id="tbody">
@@ -175,8 +175,6 @@ body {
 								<td valign="bottom">${lecturer}</td>
 								<td valign="bottom">${time}</td>
 								<td valign="bottom">${address}</td>
-								<td valign="bottom">${currentPeople}</td>
-								<td valign="bottom">${maxPeople}</td>
 								<td valign="bottom"><a href="#" data-container="body"
 									title="讲座详情" data-toggle="popover" data-placement="right"
 									data-delay="100" data-content="${content}">详情</a></td>
@@ -188,15 +186,16 @@ body {
 										onclick="javascript:window.location.href='QueryAttenceListAction?reserveInfo.lectureId=${id}'"
 										type="button" class="btn btn-default center btn-sm">查看考勤</button>
 								</td>
-
-								<td><s:form id="ajaxForm" action="LectureAction"
-										method="post" namespace="/ajax" role="form" theme="simple">
-										<!-- 此id为lectureInfo的id -->
-										<s:hidden name="lectureInfo.id" value="%{id}"></s:hidden>
-										<button id="delete_btn" type="submit"
-											class="btn btn-default btn-sm">修改考勤</button>
-									</s:form></td>
-
+								<!-- 修改考勤，跳转到该讲座的考勤清单界面，界面有删除，增加，修改按钮 -->
+								<td>
+									<button
+										onclick="javascript:window.location.href='UpdateAttenceListAction?reserveInfo.lectureId=${id}'"
+										type="button" class="btn btn-default center btn-sm">修改考勤</button>
+								</td>
+								<td><button
+										onclick="javascript:window.location.href='ExportAttenceListAction?lectureId=${id}'"
+										type="button" class="btn btn-default btn-sm center">删除考勤</button></td>
+								
 								<!-- window.location.href="你所要跳转的页面"; -->
 							
 								<td><s:form action="AttenceFileUploadAction" method="post"
@@ -219,23 +218,23 @@ body {
 				<!-- 分页 -->
 				<nav>
 					<ul class="pagination center">
-						<li><s:a href="QueryAttenceListAction?pageBean.pageNo=1">首页</s:a></li>
+						<li><s:a href="AdminManageAttenceAction?pageBean.pageNo=1">首页</s:a></li>
 						<s:if test="pageBean.pageNo > 1 ">
 							<li><s:a
-									href="QueryAttenceListAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
+									href="AdminManageAttenceAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
 						</s:if>
 						<s:else>
 							<li><s:a href="#">上一页</s:a></li>
 						</s:else>
 						<s:if test="pageBean.pageNo <pageBean.totalPage">
 							<li><s:a
-									href="QueryAttenceListAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
+									href="AdminManageAttenceAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
 						</s:if>
 						<s:else>
 							<li><s:a href="#">下一页</s:a></li>
 						</s:else>
 						<li><s:a
-								href="QueryAttenceListAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
+								href="AdminManageAttenceAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
 						</li>
 
 					</ul>

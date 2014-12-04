@@ -11,5 +11,7 @@
     		<property name="username" column="username"></property>
     		<property name="lectureId" column="lectureId"></property>
     		<property name="attence" column="attence"></property>
+    		<property name="grade" column="grade"></property>
+    		<property name="major" column="major"></property>
     	</class>
     </hibernate-mapping>

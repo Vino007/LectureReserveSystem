@@ -53,6 +53,19 @@ private List<Object> condition;
 			throw new RuntimeException();
 		}
 	}
+	
+	@Transactional(propagation=Propagation.REQUIRED,readOnly=false)
+	public void deleteUsers(List<Long> ids) throws RuntimeException{
+		try{
+		for(Long id :ids)
+			if(id!=null)
+				userDao.delete(User.class,id);
+		}catch(Exception e){
+			throw new RuntimeException();
+		}
+	}
+	
+	
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=false)
 	public void updateUser(User user) throws RuntimeException{
 		String hql="update User u set u.password=?,u.name=? where u.id=?";

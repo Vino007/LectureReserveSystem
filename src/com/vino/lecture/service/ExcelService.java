@@ -29,6 +29,7 @@ import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
 import com.vino.lecture.domain.ReserveInfo;
+import com.vino.lecture.domain.User;
 @Service
 public class ExcelService extends BaseService{
 	/*
@@ -47,7 +48,7 @@ public class ExcelService extends BaseService{
 		String title=(String) lectureDao.query("select l.title from LectureInfo l where l.id=?", condition);
 		String[] heads={"学号","姓名"};		
 		try {
-			createExcel(new FileOutputStream( ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/export.xls")),
+			createAttenceOrReserveExcel(new FileOutputStream( ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/export.xls")),
 					title, heads, reserveInfos);
 		System.out.println(ServletActionContext.getServletContext().getContextPath());
 		
@@ -78,7 +79,7 @@ public class ExcelService extends BaseService{
 		String title=(String) lectureDao.query("select l.title from LectureInfo l where l.id=?", condition);
 		String[] heads={"学号","姓名"};		
 		try {
-			createExcel(new FileOutputStream( ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/export.xls")),
+			createAttenceOrReserveExcel(new FileOutputStream( ServletActionContext.getServletContext().getRealPath("/WEB-INF/download/export.xls")),
 					title, heads, reserveInfos);
 		System.out.println(ServletActionContext.getServletContext().getContextPath());
 		
@@ -98,19 +99,42 @@ public class ExcelService extends BaseService{
 		}
 	}
 	/**
-	 * 导入excel
+	 * 导入考勤excel
 	 */
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=false)
-	public void importExcel(String filename,long id){
+	public void importAttenceExcel(String filename,long id){
 		try {
-			readExcel(new FileInputStream(ServletActionContext.getServletContext().getRealPath("/WEB-INF/upload/"+filename)),id);
+			readAttenceExcel(new FileInputStream(ServletActionContext.getServletContext().getRealPath("/WEB-INF/upload/"+filename)),id);
 		} catch (BiffException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void createExcel(OutputStream os,String title,String[] heads,List<ReserveInfo> list) throws IOException,
+	/**
+	 * 导入用户excel
+	 */
+	@Transactional(propagation=Propagation.REQUIRED,readOnly=false)
+	public void importUserExcel(String filename){
+		try {
+			readUserExcel(new FileInputStream(ServletActionContext.getServletContext().getRealPath("/WEB-INF/upload/"+filename)));
+		} catch (BiffException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 创建预约列表或者考勤表的excel的底层，两者的信息是一样的
+	 * @param os
+	 * @param title
+	 * @param heads
+	 * @param list
+	 * @throws IOException
+	 * @throws RowsExceededException
+	 * @throws WriteException
+	 */
+	public void createAttenceOrReserveExcel(OutputStream os,String title,String[] heads,List<ReserveInfo> list) throws IOException,
 			RowsExceededException, WriteException {
 		// 创建工作区
 		WritableWorkbook workbook = Workbook.createWorkbook(os);
@@ -134,20 +158,20 @@ public class ExcelService extends BaseService{
 		for(int i=0;i<list.size();i++){
 			sheet.addCell(new Label(0, i+2, list.get(i).getUsername()));
 			sheet.addCell(new Label(1, i+2, list.get(i).getName()));
+			sheet.addCell(new Label(2, i+2, list.get(i).getGrade()));
+			sheet.addCell(new Label(3, i+2, list.get(i).getMajor()));
+		
 		}
 		// 将内容写到输出流中，然后关闭工作区，最后关闭输出流
 		workbook.write();
 		workbook.close();
 		os.close();
 	}
-	
-	
-	
-	
+		
 	//导入学生名单 学号+姓名
 	//第三行开始为 有效数据
 	
-	public void readExcel(InputStream is,long id) throws BiffException, IOException{
+	public void readAttenceExcel(InputStream is,long id) throws BiffException, IOException{
 		Workbook workbook=Workbook.getWorkbook(is);
 		if(workbook.getNumberOfSheets()>0){
 			Sheet sheet=workbook.getSheet(0);
@@ -168,8 +192,41 @@ public class ExcelService extends BaseService{
 				
 		}
 	}
-	public void importDB(){
-		
+	
+	/**
+	 * excel格式：
+	 * 第一行为 字段名：学号，姓名，性别，年级，学院
+	 * 第二行为 实际值
+	 * @param is
+	 * @throws BiffException
+	 * @throws IOException
+	 */
+	public void readUserExcel(InputStream is) throws BiffException, IOException{
+		Workbook workbook=Workbook.getWorkbook(is);
+		if(workbook.getNumberOfSheets()>0){
+			Sheet sheet=workbook.getSheet(0);
+			Cell[] usernameCells=sheet.getColumn(0);
+			Cell[] nameCells=sheet.getColumn(1);
+			Cell[] genderCells=sheet.getColumn(2);
+			Cell[] gradeCells=sheet.getColumn(3);
+			Cell[] majorCells=sheet.getColumn(4);
+			
+			for(int i=1;i<nameCells.length;i++){
+				User user=new User();
+				user.setUsername(usernameCells[i].getContents());
+				user.setName(nameCells[i].getContents());
+				user.setGender(genderCells[i].getContents());
+				user.setGrade(gradeCells[i].getContents());
+				user.setMajor(majorCells[i].getContents());
+				userDao.add(user);
+				System.out.println(nameCells[i].getContents());
+			
+			}
+			workbook.close();
+			is.close();
+				
+		}
 	}
+
 
 }

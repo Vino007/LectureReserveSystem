@@ -1,7 +1,6 @@
 package com.vino.lecture.action;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.vino.lecture.domain.PageBean;
 import com.vino.lecture.domain.User;
 import com.vino.lecture.service.LectureService;
 import com.vino.lecture.service.ReserveService;

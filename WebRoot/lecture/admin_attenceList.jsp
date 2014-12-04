@@ -114,29 +114,31 @@ body {
 					<%-- <li class="active"><a href="#">Overview <span
 							class="sr-only">(current)</span></a></li> --%>
 					
-						<li><a href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
-					<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
+							<li><a
+						href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
+					<li><a href="AdminQueryAllLectureAction?pageBean.pageNo=1">讲座管理</a></li>
 					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
 					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
-					<li><a href="#">考勤信息查询</a></li>
+					
 					<!-- 上传excel，单个修改考勤，查询考勤 -->
-					<li><a href="#">考勤信息管理</a></li>
+					<li><a href="AdminManageAttenceAction?pageBean.pageNo=1">考勤信息管理</a></li>
 				</ul>
-				
+
 				<ul class="nav nav-sidebar">
 					<!-- 用户管理中有批量导入用户，用户增删改查 -->
-					<li><a href="#">用户管理</a></li>
+					<li><a href="PageQueryUserAction?pageBean.pageNo=1">用户管理</a></li>
 					<!-- 基本信息+已听讲座次数， -->
 					<li><a href="#">用户信息查询</a></li>
 					<li><a href="#">待定</a></li>
 				</ul>
-				<ul class="nav nav-sidebar">			
-					<li><a href="${pageContext.request.contextPath}/user/userInfo.jsp">新增管理员</a></li>
+				<ul class="nav nav-sidebar">
+					<li><a
+						href="${pageContext.request.contextPath}/user/userInfo.jsp">新增管理员</a></li>
 					<li><a href="user/userInfo.jsp">修改密码</a></li>
 					<li><a href="#">关于</a></li>
-				
+
 				</ul>
-				
+
 			</div>
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 		
@@ -144,8 +146,12 @@ body {
 					contenteditable="false">
 					<thead>
 						<tr class="success">
-						<th style="text-align: center">学号</th>
-						<th style="text-align: center">姓名</th>					
+						<th >学号</th>
+						<th >姓名</th>	
+						<th >年级</th>
+						<th >专业</th>	
+						
+									
 						</tr>
 					</thead>
 					<tbody id="tbody">
@@ -154,6 +160,8 @@ body {
 								
 								<td >${username}</td>
 								<td >${name}</td>
+								<td>${grade}</td>
+								<td>${major}</td>
 							<tr>
 						</s:iterator>
 					</tbody>
@@ -193,7 +201,7 @@ body {
 		//首页
 		$(document).ready(function() {
 			$("#firstPage").click(function() {
-				$.get("ajax/AjaxQueryReserveList", {
+				$.get("ajax/AjaxQueryAttenceList", {
 					"pageBean.pageNo" : "1"
 				}, function(data, status) {
 					queryReserveListCallback(data, status);
@@ -208,7 +216,7 @@ body {
 					var nextPage = Number($("#pageNo").text()) - 1;
 				else
 					var nextPage = 1;
-				$.get("ajax/AjaxQueryReserveList", {
+				$.get("ajax/AjaxQueryAttenceList", {
 					"pageBean.pageNo" : nextPage
 				}, function(data, status) {
 					queryReserveListCallback(data, status);
@@ -225,7 +233,7 @@ body {
 					var nextPage = Number($("#pageNo").text()) + 1;//加页
 				else
 					var nextPage = Number($("#pageNo").text());//保持不变
-				$.get("ajax/AjaxQueryReserveList",{
+				$.get("ajax/AjaxQueryAttenceList",{
 					"pageBean.pageNo" : nextPage
 					},function(data,status) {
 						queryReserveListCallback(data,status);
@@ -236,7 +244,7 @@ body {
 		//尾页
 		$(document).ready(function() {
 			$("#lastPage").click(function() {
-				$.get("ajax/AjaxQueryReserveList", {
+				$.get("ajax/AjaxQueryAttenceList", {
 					"pageBean.pageNo" : $("#totalPage").text()
 				}, function(data, status) {
 					queryReserveListCallback(data, status);

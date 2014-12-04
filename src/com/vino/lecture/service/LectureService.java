@@ -187,6 +187,18 @@ public class LectureService extends BaseService {
 			throw new RuntimeException();
 		}
 	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void deleteLectures(List<Long> ids) throws RuntimeException {
+		try {
+			for(long id:ids)
+			lectureDao.delete(LectureInfo.class, id);
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
+	}
+	
+	
 	/**
 	 * 设置一个定时器
 	 * @param lectureInfo

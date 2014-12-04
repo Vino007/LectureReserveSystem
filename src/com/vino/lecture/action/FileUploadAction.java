@@ -124,7 +124,7 @@ public class FileUploadAction extends ActionSupport{
 	
 	public String importAttenceListExcel() throws Exception{
 		try{
-		excelService.importExcel(newFileName,lectureId);
+		excelService.importAttenceExcel(newFileName,lectureId);
 		resultMap.put("result", "success");
 		}catch(Exception e){
 			e.printStackTrace();
@@ -133,6 +133,19 @@ public class FileUploadAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
+	
+	public String importUserListExcel() throws Exception{
+		try{
+		excelService.importUserExcel(newFileName);
+		resultMap.put("result", "success");
+		}catch(Exception e){
+			e.printStackTrace();
+			resultMap.put("result", "fail");
+			System.out.println("import³ö´í");
+		}
+		return SUCCESS;
+	}
+	
 	
 	
 	

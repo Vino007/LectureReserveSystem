@@ -133,6 +133,14 @@
 			<result name="login">/login.jsp</result>
 
 		</action>
+		
+			<!-- 查询考勤清单 -->
+		<action name="UpdateAttenceListAction" class="lectureAction"
+			method="queryAttenceList">
+			<result name="success">/lecture/admin_updateAttence.jsp</result>
+			<result name="login">/login.jsp</result>
+
+		</action>
 
 		<action name="AddLectureAction" class="lectureAction" method="addLecture">
 			<result name="success">/lecture/admin_addLecture.jsp</result>
@@ -151,6 +159,20 @@
 		<action name="DeleteLectureAction" class="lectureAction"
 			method="deleteLecture">
 			<result name="success">/lectureManage.jsp</result>
+			<result name="login">/login.jsp</result>
+
+		</action>
+		<!-- 删除多个讲座 -->
+			<action name="DeleteLecturesAction" class="lectureAction"
+			method="deleteLectures">
+			<result name="success">/lectureManage.jsp</result>
+			<result name="login">/login.jsp</result>
+
+		</action>
+			<!-- 删除多个考勤 -->
+			<action name="DeleteAttencesAction" class="lectureAction"
+			method="deleteAttences">
+			<result name="success">/adminLectureManage.jsp</result>
 			<result name="login">/login.jsp</result>
 
 		</action>
@@ -177,7 +199,7 @@
 
 		</action>
 		<action name="PageQueryUserAction" class="userAction" method="pageQueryUser">
-			<result name="success">/queryUser.jsp</result>
+			<result name="success">/user/admin_manageUser.jsp</result>
 			<result name="input">/login.jsp</result>
 
 		</action>
@@ -213,13 +235,28 @@
 				class="org.apache.struts2.json.JSONInterceptor" />		
 		</interceptors>
 		
-		
+		<!-- 上传考勤文件 -->
 		<action name="AttenceFileUploadAction" class="fileUploadAction">
 			<param name="uploadDir">/WEB-INF/upload/</param>
 			<result name="success" type="chain">ImportAttenceListAction</result>
 			<result name="input">/login.jsp</result>
 		</action>
+		<!-- 上传用户列表文件 -->
+		<action name="UserFileUploadAction" class="fileUploadAction">
+			<param name="uploadDir">/WEB-INF/upload/</param>
+			<result name="success" type="chain">ImportUserListAction</result>
+			<result name="input">/login.jsp</result>
+		</action>
+		<!-- 导入考勤列表 -->
 		<action name="ImportAttenceListAction" class="fileUploadAction" method="importAttenceListExcel">			
+			<result name="success" type="json">
+			<param name="root">resultMap</param> 
+			</result>
+			<result name="input">/login.jsp</result>
+		</action>
+		
+		<!-- 导入用户列表 -->
+		<action name="ImportUserListAction" class="fileUploadAction" method="importUserListExcel">			
 			<result name="success" type="json">
 			<param name="root">resultMap</param> 
 			</result>
@@ -268,7 +305,34 @@
 			<interceptor-ref name="myStack"></interceptor-ref>
 
 		</action>
+				
+			<!-- 删除多个考勤 -->
+			<action name="AjaxDeleteAttences" class="lectureAction"
+			method="deleteAttences">
+			<result name="success" type="json">
+				<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
 
+		</action>
+		<!-- 添加考勤 -->
+			<action name="AjaxAddAttence" class="lectureAction"
+			method="addAttence">
+			<result name="success" type="json">
+				<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+
+		</action>
+		<!-- 添加预约 -->
+			<action name="AjaxAddReserve" class="lectureAction"
+			method="addReserve">
+			<result name="success" type="json">
+				<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+
+		</action>
 		<!-- 讲座管理action -->
 
 		<!-- 查询所有讲座 -->
@@ -305,6 +369,14 @@
 
 		</action>
 		
+			<action name="AjaxQueryAttenceList" class="lectureAction"
+			method="queryAttenceList">
+			<result name="success" type="json">
+				<param name="root">pageBean</param>
+			</result>
+
+		</action>
+		
 		<action name="AjaxAddLectureAction" class="lectureAction" method="addLecture">
 			<result name="success" type="json">
 				<param name="root">resultMap</param> 
@@ -330,8 +402,26 @@
 				<param name="root">resultMap</param> 
 			</result>
 			<interceptor-ref name="myStack"></interceptor-ref>
+		
 
-
+		</action>
+		<action name="AjaxDeleteUsers" class="userAction" method="deleteUsers">
+			<result name="success" type="json">
+			<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+		<action name="AjaxAddUser" class="userAction" method="addUser">
+			<result name="success" type="json">
+			<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
+		</action>
+			<action name="AjaxUpadteUser" class="userAction" method="updateUser">
+			<result name="success" type="json">
+			<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="myStack"></interceptor-ref>
 		</action>
 	</package>
 </struts>

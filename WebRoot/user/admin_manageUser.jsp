@@ -19,8 +19,16 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
- 
+
 <style type="text/css">
+.table-full {
+	width: 100%;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100dx;
+}
+
 .center {
 	width: auto;
 	display: table;
@@ -51,21 +59,23 @@ body {
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">讲座预约系统</a>
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/adminLectureManage.jsp">讲座预约系统</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
+					<li class="active"><a href="#">新增讲座</a></li>
+					<li><a href="#">讲座管理</a></li>
+					<li><a href="#">考勤管理</a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+						data-toggle="dropdown">用户管理 <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
+							<li><a href="#">新增管理员</a></li>
+							<li><a href="#">新增用户</a></li>
+							<li><a href="#">修改用户信息</a></li>
+							<li><a href="#">修改管理员密码</a></li>
 							<li class="divider"></li>
 							<li><a href="#">Separated link</a></li>
 							<li class="divider"></li>
@@ -79,7 +89,7 @@ body {
 					<button type="submit" class="btn btn-default">Submit</button>
 				</form>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Link</a></li>
+					<li><a href="#"></a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
@@ -136,74 +146,116 @@ body {
 
 			</div>
 
-			<div class="col-sm-9 col-sm-offset-3 col-md-5 col-md-offset-2 main">
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				<div id="myAlert" class="alert alert-success" hidden="true">
-					<a href="#" class="close"  data-dismiss="alert">&times;</a> 
-					<strong id="alertMsg">添加成功！</strong>
+					<a href="#" class="close" data-dismiss="alert">&times;</a> <strong
+						id="alertMsg">添加成功！</strong>
 				</div>
-				<s:form id="addForm" action="AjaxUpdateLectureAction" method="post"
-					role="form" namespace="/ajax">
-					<input type="hidden" value="${lectureInfo.id}" name="lectureInfo.id">
-					<div class="form-group">
-						<label for="title">讲座主题</label> <input type="text"
-							class="form-control" id="title" placeholder="请输入讲座主题"
-							name="lectureInfo.title" value="${lectureInfo.title}" required>
-					</div>
-					<div class="form-group">
-						<label for="lecturer">主讲人</label> <input type="text"
-							class="form-control " id="lecturer" placeholder="请输入主讲人"
-							name="lectureInfo.lecturer" value="${lectureInfo.lecturer}"
-							required>
-					</div>
-					<div class="form-group">
-						<!-- 输出的时间为2014-11-30T08:00 -->
-						<label for="time">讲座时间</label> <input type="datetime-local"
-							class="form-control" id="time"
-							placeholder="请严格按照如下格式输入YYYY.MM.DD HH:ss(24小时制)"
-							name="lectureInfo.time" value="${lectureInfo.time}" required>
-					</div>
-					<div class="form-group">
-						<label for="address">讲座地点</label> <input type="text"
-							class="form-control" id="address" placeholder="请输入讲座地点"
-							name="lectureInfo.address" value="${lectureInfo.address}"
-							required>
-					</div>
-					<div class="form-group">
-						<label for="maxPeople">最大人数</label> <input type="number"
-							class="form-control" id="maxPeople"
-							placeholder="请输入讲座最大允许的人数(10-500)之间" name="lectureInfo.maxPeople"
-							value="${lectureInfo.maxPeople}" required min="10" max="500">
-					</div>
-					<div class="form-group">
-						<label for="content">讲座介绍</label>
-						<textarea class="form-control" id="content" placeholder="请输入讲座简介"
-							name="lectureInfo.content" required>${lectureInfo.content}</textarea>
-					</div>
-					<button type="submit" class="btn btn-default" id="submit1">确认修改</button>
-				</s:form>
+				<form action="ajax/AjaxDeleteUsers" method="post">
+					<table id="table" class="table table-hover table-full "
+						contenteditable="false">
+						<thead>
+							<tr class="success">
+								<th>选择</th>
+								<th>学号</th>
+								<th>姓名</th>
+								<th>性别</th>
+								<th>年级</th>
+								<th>专业</th>
+
+							</tr>
+						</thead>
+						<tbody id="tbody">
+
+							<s:iterator value="pageBean.beanList" status="status">
+								<tr class="tr">
+									<td><input type="checkbox" name="ids[${status.index}]"
+										value="${id}"></td>
+									<td>${username}</td>
+									<td>${name}</td>
+									<td>${gender}</td>
+									<td>${grade}</td>
+									<td>${major}</td>
+
+									<!-- theme=simple 解决了 submit标签自动换行问题 -->
+
+									<!-- 修改考勤，跳转到该讲座的考勤清单界面，界面有删除，增加，按钮 -->
+								<tr>
+							</s:iterator>
+						</tbody>
+					</table>
+					<button type="submit" class="btn btn-default btn-sm center">删除</button>
+
+				</form>
+				<p>请保证用户名不重复！否则失败</p>
+				<form action="upload/UserFileUploadAction" method="post"
+					enctype="multipart/form-data">
+
+					<input type="file" name="file" class="btn btn-default btn-xs">
+					<button type="submit" class="btn btn-default btn-xs">导入用户</button>
+				</form>
+				<!-- 分页 -->
+				<nav>
+					<ul class="pagination center">
+						<li><s:a href="PageQueryUserAction?pageBean.pageNo=1">首页</s:a></li>
+						<s:if test="pageBean.pageNo > 1 ">
+							<li><s:a
+									href="PageQueryUserAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
+						</s:if>
+						<s:else>
+							<li><s:a href="#">上一页</s:a></li>
+						</s:else>
+
+						<s:bean name="org.apache.struts2.util.Counter" id="counter" >
+						
+							<s:param name="first" value="%{pageBean.firstPage}" />							
+							<s:param name="last" value="%{pageBean.lastPage}" />
+						
+							<s:iterator>
+							<li><s:a
+									href="PageQueryUserAction?pageBean.pageNo=%{current-1}"><s:property value="current-1" /></s:a></li>
+     						
+							</s:iterator>
+						</s:bean>
+
+					
 
 
+						<s:if test="pageBean.pageNo <pageBean.totalPage">
+							<li><s:a
+									href="PageQueryUserAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
+						</s:if>
+						<s:else>
+							<li><s:a href="#">下一页</s:a></li>
+						</s:else>
+						<li><s:a
+								href="PageQueryUserAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
+						</li>
+
+					</ul>
+				</nav>
+				<p class="text-center">第${pageBean.pageNo}页/共${pageBean.totalPage}页</p>
 			</div>
 		</div>
 	</div>
 
 
-	       	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
 	<script src="${pageContext.request.contextPath}/js/jquery-2.1.1.js"></script>
 	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
-	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>	
+	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/jquery.form.js"></script>
 	<script>
 		$(document).ready(function(){		
 		$("form").submit(function(){					
 			$(this).ajaxSubmit(function(data){
-				
-			
-				if(data.result=="update_success"){
-					$("#alertMsg").text("修改成功")
+				alert(data.result);
+			//	
+				if(data.result=="success"){
+					$("#alertMsg").text("删除成功");
 				}
-				else if(data.result=="update_fail")
-					$("#alertMsg").text("修改失败，请重新尝试")
+				else
+					$("#alertMsg").text("删除失败，请重新尝试");
 					
 					$("#myAlert").show();
 			});
@@ -212,5 +264,12 @@ body {
 			});
 		});
 	</script>
+	<!-- popover弹出框需要激活才能使用！！！原因是它不是单纯的css插件 -->
+	<script type="text/javascript">
+		$(function() {
+			$("[data-toggle='popover']").popover();
+		});
+	</script>
+
 </body>
 </html>
