@@ -27,6 +27,7 @@ private List<Object> condition;
 
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=false)
 	public String addUser(User user) throws RuntimeException{
+		user.setPassword("123456");//user默认密码
 		String hql="from User u where u.username=?";
 		condition=new ArrayList<Object>();
 		condition.add(user.getUsername());
@@ -37,9 +38,10 @@ private List<Object> condition;
 		}
 		else
 			return "repeat";
-		//throw new RuntimeException("test");		
+			
 		} catch (Exception e) {
 			//重新抛出运行时异常以便事务管理处理,在action中处理该异常
+			e.printStackTrace();
 			throw new RuntimeException();
 			
 		}
@@ -90,6 +92,12 @@ private List<Object> condition;
 		return userDao.queryPage(pageNo, pageRecord,"User");		
 	}
 	
+	/**
+	 * 条件查询用户！！
+	 * @param pageNo
+	 * @param pageRecord
+	 * @return
+	 */
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
 	public PageBean<User> pageQueryUserWithCondition(int pageNo,int pageRecord) {
 		

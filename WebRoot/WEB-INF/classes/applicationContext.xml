@@ -24,6 +24,8 @@
 	<bean id="baseAction" name="baseAction" class="com.vino.lecture.action.BaseAction" scope="prototype">
 		<property name="userService" ref="userService"></property>
 		 <property name="user" ref="user"></property> 
+		 <property name="admin" ref="admin"></property> 
+		 	 <property name="adminService" ref="adminService"></property> 
 		<property name="lectureService" ref="lectureService"></property>
 		<property name="reserveService" ref="reserveService"></property>
 	</bean>

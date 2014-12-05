@@ -4,8 +4,10 @@ import javax.annotation.Resource;
 
 
 
+
 import org.springframework.stereotype.Service;
 
+import com.vino.lecture.dao.AdminDao;
 import com.vino.lecture.dao.LectureDao;
 import com.vino.lecture.dao.ReserveDao;
 import com.vino.lecture.dao.UserDao;
@@ -23,6 +25,15 @@ public class BaseService {
 	protected LectureDao lectureDao;
 	@Resource
 	protected ReserveDao reserveDao;
+	@Resource
+	protected AdminDao adminDao;
+	
+	public AdminDao getAdminDao() {
+		return adminDao;
+	}
+	public void setAdminDao(AdminDao adminDao) {
+		this.adminDao = adminDao;
+	}
 	public ReserveDao getReserveDao() {
 		return reserveDao;
 	}

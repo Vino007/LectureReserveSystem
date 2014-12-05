@@ -1,7 +1,9 @@
 package com.vino.lecture.action;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.vino.lecture.domain.Admin;
 import com.vino.lecture.domain.User;
+import com.vino.lecture.service.AdminService;
 import com.vino.lecture.service.LectureService;
 import com.vino.lecture.service.ReserveService;
 import com.vino.lecture.service.UserService;
@@ -18,7 +20,23 @@ public class BaseAction extends ActionSupport{
 	protected User user;
 	protected LectureService lectureService;
 	protected ReserveService reserveService;
+	protected AdminService adminService;
+	protected Admin admin;
 	
+	public Admin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
+	}
+	
+	public AdminService getAdminService() {
+		return adminService;
+	}
+	public void setAdminService(AdminService adminService) {
+		this.adminService = adminService;
+	}
 	public ReserveService getReserveService() {
 		return reserveService;
 	}

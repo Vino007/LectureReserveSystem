@@ -32,7 +32,7 @@
 		<mapping resource="com/vino/lecture/domain/User.hbm.xml" /> 
 		<mapping resource="com/vino/lecture/domain/LectureInfo.hbm.xml"/>
 		<mapping resource="com/vino/lecture/domain/ReserveInfo.hbm.xml"/>
-
+		<mapping resource="com/vino/lecture/domain/Admin.hbm.xml"/>
 
 	</session-factory>
 

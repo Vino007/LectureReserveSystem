@@ -273,6 +273,10 @@
 			<interceptor name="loginInterceptor"
 				class="com.vino.lecture.interceptor.LoginInterceptor">
 			</interceptor>
+			<interceptor name="adminInterceptor"
+				class="com.vino.lecture.interceptor.AdminInterceptor">
+			</interceptor>
+			
 			<interceptor-stack name="myStack">
 				<interceptor-ref name="defaultStack"></interceptor-ref>
 				<!-- 防止用户未登录进入后台 -->
@@ -280,6 +284,16 @@
 				<interceptor-ref name="logger"></interceptor-ref>
 				<interceptor-ref name="timer"></interceptor-ref>
 			</interceptor-stack>
+			
+			
+			<interceptor-stack name="adminStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<!-- 防止用户未登录进入后台 -->
+				<interceptor-ref name="adminInterceptor"></interceptor-ref>
+				<interceptor-ref name="logger"></interceptor-ref>
+				<interceptor-ref name="timer"></interceptor-ref>
+			</interceptor-stack>
+			
 		</interceptors>
 
 
@@ -312,7 +326,7 @@
 			<result name="success" type="json">
 				<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 
 		</action>
 		<!-- 添加考勤 -->
@@ -321,7 +335,7 @@
 			<result name="success" type="json">
 				<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 
 		</action>
 		<!-- 添加预约 -->
@@ -330,7 +344,7 @@
 			<result name="success" type="json">
 				<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 
 		</action>
 		<!-- 讲座管理action -->
@@ -381,7 +395,7 @@
 			<result name="success" type="json">
 				<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 
 
 		</action>
@@ -391,7 +405,7 @@
 			<result name="success" type="json">
 				<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 
 
 		</action>
@@ -401,7 +415,7 @@
 		<result name="success" type="json">
 				<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 		
 
 		</action>
@@ -409,19 +423,39 @@
 			<result name="success" type="json">
 			<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 		</action>
 		<action name="AjaxAddUser" class="userAction" method="addUser">
 			<result name="success" type="json">
 			<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 		</action>
 			<action name="AjaxUpadteUser" class="userAction" method="updateUser">
 			<result name="success" type="json">
 			<param name="root">resultMap</param> 
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+			<interceptor-ref name="adminStack"></interceptor-ref>
+		</action>
+		
+		<action name="AjaxAddAdmin" class="adminAction" method="addAdmin">
+			<result name="success" type="json">
+			<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="adminStack"></interceptor-ref>
+		</action>
+		
+		<action name="AjaxDeleteAdmins" class="adminAction" method="deleteAdmin">
+			<result name="success" type="json">
+			<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="adminStack"></interceptor-ref>
+		</action>
+		<action name="AjaxUpdateAdmin" class="adminAction" method="updateAdmin">
+			<result name="success" type="json">
+			<param name="root">resultMap</param> 
+			</result>
+			<interceptor-ref name="adminStack"></interceptor-ref>
 		</action>
 	</package>
 </struts>
