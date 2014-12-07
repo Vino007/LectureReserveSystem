@@ -28,13 +28,18 @@ public class AdminService extends BaseService {
 
 		@Transactional(propagation=Propagation.REQUIRED,readOnly=false)
 		public String addAdmin(Admin admin) throws RuntimeException{
-			
+			System.out.println("before query1");
 			String hql="from Admin u where u.username=?";
 			condition=new ArrayList<Object>();
+			System.out.println("before query2");
 			condition.add(admin.getUsername());
+			System.out.println("before query3");
 			try{
+				System.out.println("before query");
 			if(adminDao.query(hql, condition)==null){
+				System.out.println("before add");
 			adminDao.add(admin);
+			System.out.println("after add");
 			return "success";
 			}
 			else
@@ -42,6 +47,7 @@ public class AdminService extends BaseService {
 				
 			} catch (Exception e) {
 				//重新抛出运行时异常以便事务管理处理,在action中处理该异常
+				
 				e.printStackTrace();
 				throw new RuntimeException();
 				

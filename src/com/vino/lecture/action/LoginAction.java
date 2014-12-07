@@ -25,7 +25,7 @@ public class LoginAction extends BaseAction  {
 		}
 		else{
 			 ActionContext.getContext().getSession().put("user", user);
-			 return SUCCESS;
+			 return "user";
 		}
 				
 		}
@@ -37,7 +37,7 @@ public class LoginAction extends BaseAction  {
 			}
 			else{
 				 ActionContext.getContext().getSession().put("admin", admin);
-				 return SUCCESS;
+				 return "admin";
 			}
 		}
 		

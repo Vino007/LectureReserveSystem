@@ -146,8 +146,8 @@ body {
 					contenteditable="false">
 					<thead>
 						<tr class="success">
-						<th style="text-align: center">学号</th>
-						<th style="text-align: center">姓名</th>					
+						<th>学号</th>
+						<th >姓名</th>					
 						</tr>
 					</thead>
 					<tbody id="tbody">
@@ -195,7 +195,7 @@ body {
 		//首页
 		$(document).ready(function() {
 			$("#firstPage").click(function() {
-				$.get("ajax/AjaxQueryReserveList", {
+				$.get("${pageContext.request.contextPath}/ajax/AjaxQueryReserveList", {
 					"pageBean.pageNo" : "1"
 				}, function(data, status) {
 					queryReserveListCallback(data, status);
@@ -210,7 +210,7 @@ body {
 					var nextPage = Number($("#pageNo").text()) - 1;
 				else
 					var nextPage = 1;
-				$.get("ajax/AjaxQueryReserveList", {
+				$.get("${pageContext.request.contextPath}/ajax/AjaxQueryReserveList", {
 					"pageBean.pageNo" : nextPage
 				}, function(data, status) {
 					queryReserveListCallback(data, status);
@@ -227,7 +227,7 @@ body {
 					var nextPage = Number($("#pageNo").text()) + 1;//加页
 				else
 					var nextPage = Number($("#pageNo").text());//保持不变
-				$.get("ajax/AjaxQueryReserveList",{
+				$.get("${pageContext.request.contextPath}/ajax/AjaxQueryReserveList",{
 					"pageBean.pageNo" : nextPage
 					},function(data,status) {
 						queryReserveListCallback(data,status);
@@ -238,7 +238,7 @@ body {
 		//尾页
 		$(document).ready(function() {
 			$("#lastPage").click(function() {
-				$.get("ajax/AjaxQueryReserveList", {
+				$.get("${pageContext.request.contextPath}/ajax/AjaxQueryReserveList", {
 					"pageBean.pageNo" : $("#totalPage").text()
 				}, function(data, status) {
 					queryReserveListCallback(data, status);

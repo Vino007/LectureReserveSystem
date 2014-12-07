@@ -1,16 +1,15 @@
 package com.vino.lecture.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.vino.lecture.domain.Admin;
 import com.vino.lecture.domain.PageBean;
 
-@Controller
+
 public class AdminAction extends BaseAction{
 
 
@@ -20,15 +19,16 @@ public class AdminAction extends BaseAction{
 	private static final long serialVersionUID = 1L;
 	
 	
-	private List<Integer> ids;
+	private List<Integer> ids=new ArrayList<Integer>();
+	private PageBean<Admin> pageBean;
+	private Map<String,String> resultMap=new HashMap<String, String>();
 	public List<Integer> getIds() {
 		return ids;
 	}
 	public void setIds(List<Integer> ids) {
 		this.ids = ids;
 	}
-	private PageBean<Admin> pageBean;
-	private Map<String,String> resultMap=new HashMap<String, String>();
+	
 	public Map<String, String> getResultMap() {
 		return resultMap;
 	}
@@ -50,11 +50,17 @@ public class AdminAction extends BaseAction{
 
 	public String addAdmin() throws Exception {
 		try {
-			if(adminService.addAdmin(admin).equals("success"))
+			System.out.println(admin.getUsername());
+			System.out.println(admin.getPassword());
+			if(adminService==null)
+				System.out.println("adminService==null");
+			String result=adminService.addAdmin(admin);
+			if(result.equals("success"))
 				resultMap.put("result", "success");
-			else if(adminService.addAdmin(admin).equals("repeat"))
+			else if(result.equals("repeat"))
 				resultMap.put("result", "repeat");//用户名重复
 		} catch (RuntimeException e) {
+			e.printStackTrace();
 			resultMap.put("result", "fail");
 		}
 

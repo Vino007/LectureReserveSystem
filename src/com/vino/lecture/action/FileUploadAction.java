@@ -17,6 +17,7 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.vino.lecture.exception.UserNoExistException;
 import com.vino.lecture.service.ExcelService;
 
 /**
@@ -125,10 +126,15 @@ public class FileUploadAction extends ActionSupport{
 	public String importAttenceListExcel() throws Exception{
 		try{
 		excelService.importAttenceExcel(newFileName,lectureId);
-		resultMap.put("result", "success");
-		}catch(Exception e){
+		
+		resultMap.put("result", "upload_success");
+		}catch(UserNoExistException e){
+			resultMap.put("result", "user_no_exit");
+		}
+		
+		catch(Exception e){
 			e.printStackTrace();
-			resultMap.put("result", "fail");
+			resultMap.put("result", "upload_fail");
 			System.out.println("import³ö´í");
 		}
 		return SUCCESS;
@@ -137,10 +143,10 @@ public class FileUploadAction extends ActionSupport{
 	public String importUserListExcel() throws Exception{
 		try{
 		excelService.importUserExcel(newFileName);
-		resultMap.put("result", "success");
+		resultMap.put("result", "upload_success");
 		}catch(Exception e){
 			e.printStackTrace();
-			resultMap.put("result", "fail");
+			resultMap.put("result", "upload_fail");
 			System.out.println("import³ö´í");
 		}
 		return SUCCESS;

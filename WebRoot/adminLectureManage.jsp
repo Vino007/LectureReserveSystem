@@ -10,8 +10,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>讲座预约系统</title>
 <!-- Bootstrap -->
-<link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dashBoard.css">
+<link href="${pageContext.request.contextPath}/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/dashBoard.css">
 <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
 <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -86,53 +88,90 @@
 
 		<div class="row">
 			<div class="col-md-2 sidebar">
-				<ul class="nav nav-sidebar" >
+				<ul class="nav nav-sidebar">
 					<%-- <li class="active"><a href="#">Overview <span
 							class="sr-only">(current)</span></a></li> --%>
-					
-					<li><a href="${pageContext.request.contextPath}/lecture/admin_addLecture.jsp">新增讲座</a></li>
+
+					<li><a id="a_addLecture"
+						href="#">新增讲座</a></li>
 					<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
 					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
 					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
-					
+
 					<!-- 上传excel，单个修改考勤，查询考勤 -->
 					<li><a href="AdminManageAttenceAction?pageBean.pageNo=1">考勤信息管理</a></li>
 				</ul>
-				
+
 				<ul class="nav nav-sidebar">
-					<li><a href="${pageContext.request.contextPath}/user/admin_addUser.jsp">新增用户</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/user/admin_addUser.jsp">新增用户</a></li>
 					<!-- 用户管理中有批量导入用户，用户增删改查 -->
 					<li><a href="PageQueryUserAction?pageBean.pageNo=1">用户管理</a></li>
 					<!-- 基本信息+已听讲座次数， -->
-					
+
 					<li><a href="#">待定</a></li>
 				</ul>
-				<ul class="nav nav-sidebar">			
-					<li><a href="${pageContext.request.contextPath}/user/admin_addAdmin.jsp">新增管理员</a></li>
-					<li><a href="${pageContext.request.contextPath}/user/admin_updateAdmin.jsp">修改密码</a></li>
-					<li><a href="#">关于</a></li>
-				
+				<ul class="nav nav-sidebar">
+					<li><a
+						href="${pageContext.request.contextPath}/user/admin_addAdmin.jsp">新增管理员</a></li>
+					<li><a
+						href="${pageContext.request.contextPath}/user/admin_updateAdmin.jsp">修改密码</a></li>
+					<li><a href="#" data-toggle="modal" data-target="#myModal">关于</a></li>
+
 				</ul>
-				
+
 			</div>
 			<!--tab的内容  -->
-			
+
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<div class="tab-content">
-					<div class="tab-pane active" id="div0"></div>
+				<!-- <h4 class="text-center">欢迎登陆讲座预约系统</h4> -->
+				<div id="div0" ></div>
+				<!-- <div class="tab-content">
+					<div class="tab-pane active" ></div>
 					<div class="tab-pane" id="div1"></div>
 					<div class="tab-pane" id="div2">div2</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
-		</div>
+	</div>
+	
+	<!-- 模态框（Modal） -->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="myModalLabel">讲座预约系统beta 1.0</h4>
+							</div>
+							<div class="modal-body">发现bug请联系 E-mail:540134090@qq.com</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">关闭</button>
+								
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal -->
+				</div>
 
-		<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
-		<script src="js/jquery-2.1.1.js"></script>
-		<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
-		<script src="js/bootstrap.min.js"></script>
-		<!-- 异步载入页面 -->
-		
+
+
+
+	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+	<script src="js/jquery-2.1.1.js"></script>
+	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- 异步载入页面 -->
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("#a_addLecture").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/lecture/admin_addLecture.jsp ");
+		});
+});	
+	</script>
 
 </body>
 </html>

@@ -309,6 +309,26 @@ public class LectureAction extends BaseAction {
 		return SUCCESS;
 
 	}
+	
+	
+	/**
+	 * 根据讲座的ID删除该讲座的全部考勤
+	 * @return
+	 * @throws Exception
+	 */
+	public String deleteAllAttence() throws Exception {
+
+		try {
+			reserveService.deleteAllAttence(reserveInfo.getLectureId());
+
+			resultMap.put("result","delete_success");
+		} catch (RuntimeException e) {
+	
+			resultMap.put("result","delete_fail");
+		}
+		return SUCCESS;
+
+	}
 	/**
 	 * 添加考勤
 	 * @return

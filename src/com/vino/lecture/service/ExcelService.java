@@ -30,6 +30,7 @@ import jxl.write.biff.RowsExceededException;
 
 import com.vino.lecture.domain.ReserveInfo;
 import com.vino.lecture.domain.User;
+import com.vino.lecture.exception.UserNoExistException;
 @Service
 public class ExcelService extends BaseService{
 	/*
@@ -38,6 +39,7 @@ public class ExcelService extends BaseService{
 	 * 由download导出下载
 	 */
 	List<Object> condition;
+	private ReserveService reserveService=new ReserveService();
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
 	public void createReserveInfoExcel(long id){
 		String hql="from ReserveInfo r where r.lectureId=?";
@@ -168,24 +170,53 @@ public class ExcelService extends BaseService{
 		os.close();
 	}
 		
-	//导入学生名单 学号+姓名
+	//导入学生名单 学号
 	//第三行开始为 有效数据
 	
-	public void readAttenceExcel(InputStream is,long id) throws BiffException, IOException{
+	public void readAttenceExcel(InputStream is,long id) throws UserNoExistException, BiffException, IOException{
 		Workbook workbook=Workbook.getWorkbook(is);
 		if(workbook.getNumberOfSheets()>0){
 			Sheet sheet=workbook.getSheet(0);
 			Cell[] usernameCells=sheet.getColumn(0);
-			Cell[] nameCells=sheet.getColumn(1);
-			for(int i=2;i<nameCells.length;i++){
-				String hql="update ReserveInfo r set r.attence=1 where r.username=? and r.name=? and lectureId=?";
-				List<Object> condition=new ArrayList<Object>();
+		
+			for(int i=2;i<usernameCells.length;i++){
+				
+			//	reserveService.addAttence(id, usernameCells[i].getContents());
+				String hql=null;
+				
+				hql="from User u where u.username=?";
+				condition=new ArrayList<Object>();
 				condition.add(usernameCells[i].getContents());
-				condition.add(nameCells[i].getContents());
+				User user=(User) userDao.query(hql, condition);
+				if(user==null){
+					System.out.println("用户不存在");
+					throw new UserNoExistException();
+				
+				}
+				condition.clear();
 				condition.add(id);
-				reserveDao.updateWithCondition(hql, condition);			
-				System.out.println(nameCells[i].getContents());
-				System.out.println(id);
+				condition.add(user.getUsername());
+				
+				 hql="from ReserveInfo r where r.lectureId=? and r.username=? ";
+					if(reserveDao.queryWithCondition(hql,condition).size()==0){
+						System.out.println("该用户未预约，新建预约并添加考勤");
+						ReserveInfo reserveInfo=new ReserveInfo();
+						reserveInfo.setLectureId(id);
+						reserveInfo.setUsername(user.getUsername());
+						reserveInfo.setName(user.getName());
+						reserveInfo.setGrade(user.getGrade());
+						reserveInfo.setMajor(user.getMajor());
+						reserveInfo.setAttence(1);
+						reserveDao.add(reserveInfo);//添加预约信息并添加考勤
+						condition.clear();
+					}else{
+						System.out.println("用户已经预约，直接添加考勤");
+						 hql="update ReserveInfo r set r.attence=1 where r.lectureId=? and r.username=?";				
+						 reserveDao.updateWithCondition(hql, condition);
+						 condition.clear();
+					}
+					
+				
 			}
 			workbook.close();
 			is.close();
@@ -212,14 +243,23 @@ public class ExcelService extends BaseService{
 			Cell[] majorCells=sheet.getColumn(4);
 			
 			for(int i=1;i<nameCells.length;i++){
-				User user=new User();
-				user.setUsername(usernameCells[i].getContents());
-				user.setName(nameCells[i].getContents());
-				user.setGender(genderCells[i].getContents());
-				user.setGrade(gradeCells[i].getContents());
-				user.setMajor(majorCells[i].getContents());
-				userDao.add(user);
-				System.out.println(nameCells[i].getContents());
+				//;
+				String hql="from User u where u.username=?";
+				condition=new ArrayList<Object>();
+				condition.add(usernameCells[i].getContents());
+				User user=(User) userDao.query(hql, condition);
+				if(user==null){
+				User newUser=new User();
+				newUser.setUsername(usernameCells[i].getContents());
+				newUser.setName(nameCells[i].getContents());
+				newUser.setGender(genderCells[i].getContents());
+				newUser.setGrade(gradeCells[i].getContents());
+				newUser.setMajor(majorCells[i].getContents());
+				userDao.add(newUser);
+				}
+				else
+					System.out.println(user.getUsername()+"用户已经存在");
+				
 			
 			}
 			workbook.close();

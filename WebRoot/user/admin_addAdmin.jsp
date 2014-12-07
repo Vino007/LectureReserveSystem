@@ -126,7 +126,7 @@ body {
 				</ul>
 				<ul class="nav nav-sidebar">
 					<li><a
-						href="${pageContext.request.contextPath}/user/userInfo.jsp">新增管理员</a></li>
+						href="${pageContext.request.contextPath}/user/admin_addAdmin.jsp">新增管理员</a></li>
 					<li><a href="user/userInfo.jsp">修改密码</a></li>
 					<li><a href="#">关于</a></li>
 

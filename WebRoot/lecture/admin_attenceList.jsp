@@ -158,8 +158,8 @@ body {
 						<s:iterator value="pageBean.beanList" status="status">
 							<tr>
 								
-								<td >${username}</td>
-								<td >${name}</td>
+								<td>${username}</td>
+								<td>${name}</td>
 								<td>${grade}</td>
 								<td>${major}</td>
 							<tr>
@@ -197,14 +197,33 @@ body {
 	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/admin_myajax.js"></script>
+<script type="text/javascript">
+
+function queryAttenceListCallback(data,status){
+	var beanList=data.beanList;
+	var pageNo=data.pageNo;
+	var totalPage=data.totalPage;
+	$("#tbody").empty();
+	for(var i=0 ; i<beanList.length; i++){			
+	$("#tbody").append("<tr><td>"+beanList[i]["username"]+"</td><td>"+beanList[i]["name"]+
+			"</td><td>"+beanList[i]["grade"]+"</td><td>"+beanList[i]["major"]+
+			"</td></tr>");		
+	}
+
+	$("#pageNo").text(pageNo);
+	$("#totalPage").text(totalPage);
+	
+	
+}
+</script>
 	<script>
 		//首页
 		$(document).ready(function() {
 			$("#firstPage").click(function() {
-				$.get("ajax/AjaxQueryAttenceList", {
+				$.get("${pageContext.request.contextPath}/ajax/AjaxQueryAttenceList", {
 					"pageBean.pageNo" : "1"
 				}, function(data, status) {
-					queryReserveListCallback(data, status);
+					queryAttenceListCallback(data, status);
 				});
 			});
 		});
@@ -216,10 +235,10 @@ body {
 					var nextPage = Number($("#pageNo").text()) - 1;
 				else
 					var nextPage = 1;
-				$.get("ajax/AjaxQueryAttenceList", {
+				$.get("${pageContext.request.contextPath}/ajax/AjaxQueryAttenceList", {
 					"pageBean.pageNo" : nextPage
 				}, function(data, status) {
-					queryReserveListCallback(data, status);
+					queryAttenceListCallback(data, status);
 
 				});
 			});
@@ -233,10 +252,10 @@ body {
 					var nextPage = Number($("#pageNo").text()) + 1;//加页
 				else
 					var nextPage = Number($("#pageNo").text());//保持不变
-				$.get("ajax/AjaxQueryAttenceList",{
+				$.get("${pageContext.request.contextPath}/ajax/AjaxQueryAttenceList",{
 					"pageBean.pageNo" : nextPage
 					},function(data,status) {
-						queryReserveListCallback(data,status);
+						queryAttenceListCallback(data,status);
 					});
 				});
 		 });
@@ -244,10 +263,10 @@ body {
 		//尾页
 		$(document).ready(function() {
 			$("#lastPage").click(function() {
-				$.get("ajax/AjaxQueryAttenceList", {
+				$.get("${pageContext.request.contextPath}/ajax/AjaxQueryAttenceList", {
 					"pageBean.pageNo" : $("#totalPage").text()
 				}, function(data, status) {
-					queryReserveListCallback(data, status);
+					queryAttenceListCallback(data, status);
 
 				});
 			});

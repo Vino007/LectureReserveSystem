@@ -136,7 +136,8 @@ body {
 
 <!-- 右侧 -->
 
-			<div class="col-sm-9 col-sm-offset-3 col-md-5 col-md-offset-2 main">
+			<div  class="col-sm-9 col-sm-offset-3 col-md-5 col-md-offset-2 main">
+			<div id="content">
 				<div id="myAlert" class="alert alert-success" hidden="true">
 					<a href="#" class="close"  data-dismiss="alert">&times;</a> 
 					<strong id="alertMsg">添加成功！</strong>
@@ -174,11 +175,13 @@ body {
 						<label for="content">讲座介绍</label> <textarea  
 							class="form-control" id="content" placeholder="请输入讲座简介"
 							name="lectureInfo.content" required></textarea>
-					</div>					
+					</div>
+					<div class="form-group">			
 					<button type="submit" class="btn btn-default" id="submit1">提交</button>
+					</div>		
 				</s:form>
 	
-
+						</div>
 			</div>
 		</div>
 	</div>

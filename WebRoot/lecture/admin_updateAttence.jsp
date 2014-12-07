@@ -59,7 +59,8 @@ body {
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="${pageContext.request.contextPath}/adminLectureManage.jsp">讲座预约系统</a>
+				<a class="navbar-brand"
+					href="${pageContext.request.contextPath}/adminLectureManage.jsp">讲座预约系统</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -124,7 +125,7 @@ body {
 					<li><a href="AdminQueryAllLectureAction?pageBean.pageNo=1">讲座管理</a></li>
 					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
 					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
-					
+
 					<!-- 上传excel，单个修改考勤，查询考勤 -->
 					<li><a href="AdminManageAttenceAction?pageBean.pageNo=1">考勤信息管理</a></li>
 				</ul>
@@ -145,55 +146,55 @@ body {
 				</ul>
 
 			</div>
-			
+
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				<div id="myAlert" class="alert alert-success" hidden="true">
 					<a href="#" class="close" data-dismiss="alert">&times;</a> <strong
 						id="alertMsg">添加成功！</strong>
 				</div>
-				<form action="ajax/AjaxDeleteAttences" method="post">
-				<table id="table" class="table table-hover table-full "
-					contenteditable="false">
-					<thead>
-						<tr class="success">
-							<th>选择</th>
-							<th>学号</th>
-							<th>姓名</th>
-							<th>年级</th>
-							<th>专业</th>
-							
-						</tr>
-					</thead>
-					<tbody id="tbody">
-					
-						<s:iterator value="pageBean.beanList" status="status">
-							<tr class="tr">
-								<td><input type="checkbox" name="ids[${status.index}]" value="${id}"></td>
-								<td >${username}</td>
-								<td>${name}</td>
-								<td >${grade}</td>
-								<td >${major}</td>
+				<form
+					action="${pageContext.request.contextPath}/ajax/AjaxDeleteAttences"
+					method="post">
+					<table id="table" class="table table-hover table-full "
+						contenteditable="false">
+						<thead>
+							<tr class="success">
+								<th>选择</th>
+								<th>学号</th>
+								<th>姓名</th>
+								<th>年级</th>
+								<th>专业</th>
 
-								<!-- theme=simple 解决了 submit标签自动换行问题 -->
-							
-								<!-- 修改考勤，跳转到该讲座的考勤清单界面，界面有删除，增加，按钮 -->								
-							<tr>
-						</s:iterator>			
-					</tbody>
-				</table>
-				<button type="submit"				
-					 class="btn btn-default btn-sm center">删除</button>
-			
-					</form>
-					<form action="ajax/AjaxAddAttence" method="get">
-					<input type="text" name="reserveInfo.username" placeholder="请输入学号">
-					<input	type="hidden" name="reserveInfo.lectureId" value="${reserveInfo.lectureId}">
-						<button type="submit" 
-					class="btn btn-default btn-sm center">增加</button>
-					
-					</form>
+							</tr>
+						</thead>
+						<tbody id="tbody">
+
+							<s:iterator value="pageBean.beanList" status="status">
+								<tr class="tr">
+									<td><input type="checkbox" name="ids[${status.index}]"
+										value="${id}"></td>
+									<td>${username}</td>
+									<td>${name}</td>
+									<td>${grade}</td>
+									<td>${major}</td>
+
+									<!-- theme=simple 解决了 submit标签自动换行问题 -->
+
+									<!-- 修改考勤，跳转到该讲座的考勤清单界面，界面有删除，增加，按钮 -->
+								<tr>
+							</s:iterator>
+						</tbody>
+					</table>
+					<span class="center">
+						<button type="submit" class="btn btn-default btn-lg ">删除</button>
+						<button type="button" class="btn btn-default btn-lg "
+							data-toggle="modal" data-target="#addModal">增加</button>
+					</span>
+				</form>
+
+
 				<!-- 分页 -->
-					<nav>
+				<nav>
 					<ul class="pagination center">
 						<li><s:a href="UpdateAttenceListAction?pageBean.pageNo=1">首页</s:a></li>
 						<s:if test="pageBean.pageNo > 1 ">
@@ -220,6 +221,41 @@ body {
 			</div>
 		</div>
 	</div>
+
+
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">添加考勤</h4>
+				</div>
+				<form
+					action="${pageContext.request.contextPath}/ajax/AjaxAddAttence"
+					method="get">
+					<div class="modal-body">
+
+						<input type="text" name="reserveInfo.username" placeholder="请输入学号">
+						<input type="hidden" name="reserveInfo.lectureId"
+							value="${reserveInfo.lectureId}">
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="submit" class="btn btn-default  ">提交</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+
 
 
 	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->

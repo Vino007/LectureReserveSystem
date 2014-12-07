@@ -25,7 +25,7 @@
 		<property name="userService" ref="userService"></property>
 		 <property name="user" ref="user"></property> 
 		 <property name="admin" ref="admin"></property> 
-		 	 <property name="adminService" ref="adminService"></property> 
+		 <property name="adminService" ref="adminService"></property> 
 		<property name="lectureService" ref="lectureService"></property>
 		<property name="reserveService" ref="reserveService"></property>
 	</bean>
@@ -35,6 +35,12 @@
 		 <property name="user" ref="user"></property>  -->
 	</bean>
 	<bean id="userAction" name="userAction" class="com.vino.lecture.action.UserAction"
+		scope="prototype" parent="baseAction">
+		<property name="pageBean" ref="pageBean"></property>
+		
+	</bean>
+	
+	<bean id="adminAction" name="adminAction" class="com.vino.lecture.action.AdminAction"
 		scope="prototype" parent="baseAction">
 		<property name="pageBean" ref="pageBean"></property>
 		

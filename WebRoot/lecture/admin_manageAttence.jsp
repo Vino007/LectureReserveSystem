@@ -192,10 +192,12 @@ body {
 										onclick="javascript:window.location.href='UpdateAttenceListAction?reserveInfo.lectureId=${id}'"
 										type="button" class="btn btn-default center btn-sm">修改考勤</button>
 								</td>
-								<td><button
-										onclick="javascript:window.location.href='ExportAttenceListAction?lectureId=${id}'"
-										type="button" class="btn btn-default btn-sm center">删除考勤</button></td>
-								
+								<td>
+								<form action="${pageContext.request.contextPath}/ajax/AjaxDeleteAllAttence" method="post">
+								<input type="hidden" name="reserveInfo.lectureId" value="${id}">
+								<button
+										type="submit" class="btn btn-default btn-sm center">删除考勤</button>
+								</form></td>
 								<!-- window.location.href="你所要跳转的页面"; -->
 							
 								<td><s:form action="AttenceFileUploadAction" method="post"
@@ -256,13 +258,16 @@ body {
 			$(this).ajaxSubmit(function(data){
 				alert(data.result);
 			//	
-				if(data.result=="success"){
-					$("#alertMsg").text("添加成功");
+				if(data.result=="delete_success"){
+					$("#alertMsg").text("删除成功");
 				}
-				else 
-					$("#alertMsg").text("添加失败，请重新尝试");
+				else if(data.result=="upload_success")
+					$("#alertMsg").text("上传考勤成功");
 					//重置讲座表单
-					
+					else if(data.result=="delete_fail")
+						$("#alertMsg").text("删除失败，请重新尝试");
+						else 
+							$("#alertMsg").text("上传失败，请重新尝试");
 					$("#myAlert").show();
 			});
 			 return false;//阻止表单默认提交 

@@ -14,23 +14,23 @@
 	<constant name="struts.multipart.maxSize" value="10000000"></constant>
 	<constant name="struts.multipart.saveDir" value="/tmp" />
 	<!-- 权限管理的拦截器专用package -->
-	<package name="authorityCheck" extends="struts-default">
+	<package name="userCheck" extends="struts-default">
 		<interceptors>
 			<!-- 在package中配置 注意，login不需要定义此拦截器,定义权限控制拦截器 -->
 			<!-- 定义含“权限检查拦截器”的拦截器栈，注意缺省的拦截器栈“defaultStack”要放在前面 -->
-			<interceptor name="authority"
+			<interceptor name="userCheck"
 				class="com.vino.lecture.interceptor.LoginInterceptor">
 			</interceptor>
-			<interceptor-stack name="authorityStack">
+			<interceptor-stack name="userStack">
 				<interceptor-ref name="defaultStack"></interceptor-ref>
 				<!-- 防止用户未登录进入后台 -->
-				<interceptor-ref name="authority"></interceptor-ref>
+				<interceptor-ref name="userCheck"></interceptor-ref>
 				<interceptor-ref name="logger"></interceptor-ref>
 				<interceptor-ref name="timer"></interceptor-ref>
 			</interceptor-stack>
 		</interceptors>
 		<!--注意此行，设为默认的，一劳永逸 -->
-		<default-interceptor-ref name="authorityStack"></default-interceptor-ref>
+		<default-interceptor-ref name="userStack"></default-interceptor-ref>
 		<!-- 定义全局处理结果 未登录转到此页 -->
 		<global-results>
 			<!-- 逻辑名为login的结果，映射到/login.jsp页面 -->
@@ -40,10 +40,40 @@
 		</global-results>
 	</package>
 
+	<!-- 权限管理的拦截器专用package -->
+	<package name="adminCheck" extends="struts-default">
+		<interceptors>
+			<!-- 在package中配置 注意，login不需要定义此拦截器,定义权限控制拦截器 -->
+			<!-- 定义含“权限检查拦截器”的拦截器栈，注意缺省的拦截器栈“defaultStack”要放在前面 -->
+			<interceptor name="adminCheck"
+				class="com.vino.lecture.interceptor.AdminInterceptor">
+			</interceptor>
+			<interceptor-stack name="adminStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<!-- 防止用户未登录进入后台 -->
+				<interceptor-ref name="adminCheck"></interceptor-ref>
+				<interceptor-ref name="logger"></interceptor-ref>
+				<interceptor-ref name="timer"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!--注意此行，设为默认的，一劳永逸 -->
+		<default-interceptor-ref name="adminStack"></default-interceptor-ref>
+		<!-- 定义全局处理结果 未登录转到此页 -->
+		<global-results>
+			<!-- 逻辑名为login的结果，映射到/login.jsp页面 -->
+			<result name="login">/login.jsp</result>
+			<!-- 无权限进行操作 -->
+			<!-- <result name="authorityDeny">/authorityMsg.jsp</result> -->
+		</global-results>
+	</package>
+
+
+
 	<!-- 登录 -->
 	<package name="login" extends="struts-default">
 		<action name="LoginAction" class="loginAction">
-			<result name="success">/home.jsp</result>
+			<result name="user">/lectureManage.jsp</result>
+				<result name="admin">/adminLectureManage.jsp</result>
 			<result name="input">/login.jsp</result>
 			<result name="login">/login.jsp</result>
 			<!-- defaultStack必须要有，要不然会获取不了表单数据 -->
@@ -54,7 +84,7 @@
 	</package>
 
 
-	<package name="action" extends="authorityCheck">
+	<package name="user" extends="userCheck">
 		<!-- 添加了json的result-type和拦截器，这样就可以不用extends json-default -->
 		<result-types>
 			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
@@ -83,19 +113,8 @@
 			<result name="login">/login.jsp</result>
 
 		</action>
-		
-			<action name="AdminQueryAllLectureAction" class="lectureAction"
-			method="queryAllLecture">
-			<result name="success">/lecture/admin_queryLecture.jsp</result>
-			<result name="login">/login.jsp</result>
 
-		</action>
-				<action name="AdminManageAttenceAction" class="lectureAction"
-			method="queryAllLecture">
-			<result name="success">/lecture/admin_manageAttence.jsp</result>
-			<result name="login">/login.jsp</result>
 
-		</action>
 		<!-- 查询可预约的讲座 -->
 		<action name="QueryAvailableLectureAction" class="lectureAction"
 			method="queryAvailableLecture">
@@ -110,41 +129,63 @@
 			<result name="login">/login.jsp</result>
 
 		</action>
-		
-			<action name="QueryLectureByIdAction" class="lectureAction"
-			method="queryLectureById">
-			<result name="success">/lecture/admin_updateLecture.jsp</result>
-			<result name="login">/login.jsp</result>
+
+		<action name="UpdateUserAction" class="userAction" method="updateUser">
+			<result name="success">/userManage.jsp</result>
+			<result name="input">/login.jsp</result>
 
 		</action>
-		
+	</package>
+
+
+
+	<!-- admin权限 -->
+	<package name="admin" extends="adminCheck">
+		<action name="AdminQueryAllLectureAction" class="lectureAction"
+			method="queryAllLecture">
+			<result name="success">/lecture/admin_queryLecture.jsp</result>
+
+
+		</action>
+		<action name="AdminManageAttenceAction" class="lectureAction"
+			method="queryAllLecture">
+			<result name="success">/lecture/admin_manageAttence.jsp</result>
+
+
+		</action>
+
+		<action name="QueryLectureByIdAction" class="lectureAction"
+			method="queryLectureById">
+			<result name="success">/lecture/admin_updateLecture.jsp</result>
+
+
+		</action>
+
 		<!-- 查询预约清单 -->
 		<action name="QueryReserveListAction" class="lectureAction"
 			method="queryReserveList">
 			<result name="success">/lecture/admin_reserveList.jsp</result>
-			<result name="login">/login.jsp</result>
 
 		</action>
-		
+
 		<!-- 查询考勤清单 -->
 		<action name="QueryAttenceListAction" class="lectureAction"
 			method="queryAttenceList">
 			<result name="success">/lecture/admin_attenceList.jsp</result>
-			<result name="login">/login.jsp</result>
+
 
 		</action>
-		
-			<!-- 查询考勤清单 -->
+
+		<!-- 查询考勤清单 -->
 		<action name="UpdateAttenceListAction" class="lectureAction"
 			method="queryAttenceList">
 			<result name="success">/lecture/admin_updateAttence.jsp</result>
-			<result name="login">/login.jsp</result>
 
 		</action>
 
 		<action name="AddLectureAction" class="lectureAction" method="addLecture">
 			<result name="success">/lecture/admin_addLecture.jsp</result>
-			<result name="login">/login.jsp</result>
+
 			<result name="input">/lecture/admin_addLecture.jsp</result>
 
 		</action>
@@ -152,50 +193,27 @@
 		<action name="UpdateLectureAction" class="lectureAction"
 			method="updateLecture">
 			<result name="success">/lectureManage.jsp</result>
-			<result name="login">/login.jsp</result>
+
 
 		</action>
 
 		<action name="DeleteLectureAction" class="lectureAction"
 			method="deleteLecture">
 			<result name="success">/lectureManage.jsp</result>
-			<result name="login">/login.jsp</result>
 
 		</action>
 		<!-- 删除多个讲座 -->
-			<action name="DeleteLecturesAction" class="lectureAction"
+		<action name="DeleteLecturesAction" class="lectureAction"
 			method="deleteLectures">
 			<result name="success">/lectureManage.jsp</result>
-			<result name="login">/login.jsp</result>
+
 
 		</action>
-			<!-- 删除多个考勤 -->
-			<action name="DeleteAttencesAction" class="lectureAction"
+		<!-- 删除多个考勤 -->
+		<action name="DeleteAttencesAction" class="lectureAction"
 			method="deleteAttences">
 			<result name="success">/adminLectureManage.jsp</result>
-			<result name="login">/login.jsp</result>
 
-		</action>
-
-		<!-- 用户管理action -->
-		<action name="AddUserAction" class="userAction" method="addUser">
-			<result name="success">/userManage.jsp</result>
-			<result name="input">/login.jsp</result>
-
-		</action>
-		<action name="UpdateUserAction" class="userAction" method="updateUser">
-			<result name="success">/userManage.jsp</result>
-			<result name="input">/login.jsp</result>
-
-		</action>
-		<action name="DeleteUserAction" class="userAction" method="deleteUser">
-			<result name="success">/userManage.jsp</result>
-			<result name="input">/login.jsp</result>
-
-		</action>
-		<action name="QueryAllUserAction" class="userAction" method="queryAllUser">
-			<result name="success">/queryUser.jsp</result>
-			<result name="input">/login.jsp</result>
 
 		</action>
 		<action name="PageQueryUserAction" class="userAction" method="pageQueryUser">
@@ -203,6 +221,7 @@
 			<result name="input">/login.jsp</result>
 
 		</action>
+
 		<action name="DownloadAction" class="downloadAction">
 			<!-- 指定文件的下载路径，默认是webroot为根目录 -->
 			<param name="inputPath">/WEB-INF/download/export.xls</param>
@@ -213,28 +232,30 @@
 			</result>
 		</action>
 		<!-- 创建excel并转发到download action -->
-		<action name="ExportReserveListAction" class="downloadAction" method="exportReserveListExcel">
+		<action name="ExportReserveListAction" class="downloadAction"
+			method="exportReserveListExcel">
 			<result name="success" type="chain">DownloadAction</result>
 		</action>
-		
+
 		<!-- 创建excel并转发到download action -->
-		<action name="ExportAttenceListAction" class="downloadAction" method="exportAttenceListExcel">
+		<action name="ExportAttenceListAction" class="downloadAction"
+			method="exportAttenceListExcel">
 			<result name="success" type="chain">DownloadAction</result>
 		</action>
 	</package>
 
 
 	<!-- 上传文件 -->
-	<package name="upload" extends="authorityCheck" namespace="/upload">
-	
-	<result-types>
+	<package name="upload" extends="adminCheck" namespace="/upload">
+
+		<result-types>
 			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
 		</result-types>
 		<interceptors>
 			<interceptor name="json"
-				class="org.apache.struts2.json.JSONInterceptor" />		
+				class="org.apache.struts2.json.JSONInterceptor" />
 		</interceptors>
-		
+
 		<!-- 上传考勤文件 -->
 		<action name="AttenceFileUploadAction" class="fileUploadAction">
 			<param name="uploadDir">/WEB-INF/upload/</param>
@@ -248,17 +269,19 @@
 			<result name="input">/login.jsp</result>
 		</action>
 		<!-- 导入考勤列表 -->
-		<action name="ImportAttenceListAction" class="fileUploadAction" method="importAttenceListExcel">			
+		<action name="ImportAttenceListAction" class="fileUploadAction"
+			method="importAttenceListExcel">
 			<result name="success" type="json">
-			<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
 			<result name="input">/login.jsp</result>
 		</action>
-		
+
 		<!-- 导入用户列表 -->
-		<action name="ImportUserListAction" class="fileUploadAction" method="importUserListExcel">			
+		<action name="ImportUserListAction" class="fileUploadAction"
+			method="importUserListExcel">
 			<result name="success" type="json">
-			<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
 			<result name="input">/login.jsp</result>
 		</action>
@@ -266,87 +289,32 @@
 
 
 
-	<!-- 通过创建一个新的包继承json-default实现权限不足跳页 -->
-	<package name="ajax" extends="json-default" namespace="/ajax">
-
+	<package name="userAjax" extends="userCheck" namespace="/ajax">
+		<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
 		<interceptors>
-			<interceptor name="loginInterceptor"
-				class="com.vino.lecture.interceptor.LoginInterceptor">
-			</interceptor>
-			<interceptor name="adminInterceptor"
-				class="com.vino.lecture.interceptor.AdminInterceptor">
-			</interceptor>
-			
-			<interceptor-stack name="myStack">
-				<interceptor-ref name="defaultStack"></interceptor-ref>
-				<!-- 防止用户未登录进入后台 -->
-				<interceptor-ref name="loginInterceptor"></interceptor-ref>
-				<interceptor-ref name="logger"></interceptor-ref>
-				<interceptor-ref name="timer"></interceptor-ref>
-			</interceptor-stack>
-			
-			
-			<interceptor-stack name="adminStack">
-				<interceptor-ref name="defaultStack"></interceptor-ref>
-				<!-- 防止用户未登录进入后台 -->
-				<interceptor-ref name="adminInterceptor"></interceptor-ref>
-				<interceptor-ref name="logger"></interceptor-ref>
-				<interceptor-ref name="timer"></interceptor-ref>
-			</interceptor-stack>
-			
+			<interceptor name="json"
+				class="org.apache.struts2.json.JSONInterceptor" />
 		</interceptors>
-
-
-		<global-results>
-			<result name="login">/login.jsp</result>
-		</global-results>
-		
-		
 		<!-- 预约和取消预约的action采用submit中使用submit方式 -->
 		<action name="AjaxReserveLecture" class="lectureAction" method="reserveLecture">
 			<result name="success" type="json">
-				<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+
 
 		</action>
 
 		<action name="AjaxCancelReserveLecture" class="lectureAction"
 			method="cancelReserveLecture">
 			<result name="success" type="json">
-				<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="myStack"></interceptor-ref>
+
 
 		</action>
-				
-			<!-- 删除多个考勤 -->
-			<action name="AjaxDeleteAttences" class="lectureAction"
-			method="deleteAttences">
-			<result name="success" type="json">
-				<param name="root">resultMap</param> 
-			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
 
-		</action>
-		<!-- 添加考勤 -->
-			<action name="AjaxAddAttence" class="lectureAction"
-			method="addAttence">
-			<result name="success" type="json">
-				<param name="root">resultMap</param> 
-			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
-
-		</action>
-		<!-- 添加预约 -->
-			<action name="AjaxAddReserve" class="lectureAction"
-			method="addReserve">
-			<result name="success" type="json">
-				<param name="root">resultMap</param> 
-			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
-
-		</action>
 		<!-- 讲座管理action -->
 
 		<!-- 查询所有讲座 -->
@@ -374,28 +342,86 @@
 			</result>
 
 		</action>
+		<action name="AjaxUpadteUser" class="userAction" method="updateUser">
+			<result name="success" type="json">
+				<param name="root">resultMap</param>
+			</result>
+
+		</action>
+
+	</package>
+
+
+
+
+	<!-- 通过创建一个新的包继承json-default实现权限不足跳页 -->
+	<package name="adminAjax" extends="adminCheck" namespace="/ajax">
+		<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
+		<interceptors>
+			<interceptor name="json"
+				class="org.apache.struts2.json.JSONInterceptor" />
+		</interceptors>
+
+
+
+
+		<!-- 删除多个考勤 -->
+		<action name="AjaxDeleteAttences" class="lectureAction" method="deleteAttences">
+			<result name="success" type="json">
+				<param name="root">resultMap</param>
+			</result>
+
+		</action>
 		
-			<action name="AjaxQueryReserveList" class="lectureAction"
+		<!-- 删除全部考勤 -->
+		<action name="AjaxDeleteAllAttence" class="lectureAction" method="deleteAllAttence">
+			<result name="success" type="json">
+				<param name="root">resultMap</param>
+			</result>
+
+		</action>
+		<!-- 添加考勤 -->
+		<action name="AjaxAddAttence" class="lectureAction" method="addAttence">
+			<result name="success" type="json">
+				<param name="root">resultMap</param>
+			</result>
+
+
+		</action>
+		<!-- 添加预约 -->
+		<action name="AjaxAddReserve" class="lectureAction" method="addReserve">
+			<result name="success" type="json">
+				<param name="root">resultMap</param>
+			</result>
+
+
+		</action>
+
+
+		<action name="AjaxQueryReserveList" class="lectureAction"
 			method="queryReserveList">
 			<result name="success" type="json">
 				<param name="root">pageBean</param>
 			</result>
 
 		</action>
-		
-			<action name="AjaxQueryAttenceList" class="lectureAction"
+
+		<action name="AjaxQueryAttenceList" class="lectureAction"
 			method="queryAttenceList">
 			<result name="success" type="json">
 				<param name="root">pageBean</param>
 			</result>
 
 		</action>
-		
-		<action name="AjaxAddLectureAction" class="lectureAction" method="addLecture">
+
+		<action name="AjaxAddLectureAction" class="lectureAction"
+			method="addLecture">
 			<result name="success" type="json">
-				<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
+
 
 
 		</action>
@@ -403,59 +429,54 @@
 		<action name="AjaxUpdateLectureAction" class="lectureAction"
 			method="updateLecture">
 			<result name="success" type="json">
-				<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
+
 
 
 		</action>
 
 		<action name="AjaxDeleteLectureAction" class="lectureAction"
 			method="deleteLecture">
-		<result name="success" type="json">
-				<param name="root">resultMap</param> 
+			<result name="success" type="json">
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
-		
+
+
 
 		</action>
 		<action name="AjaxDeleteUsers" class="userAction" method="deleteUsers">
 			<result name="success" type="json">
-			<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
+
 		</action>
 		<action name="AjaxAddUser" class="userAction" method="addUser">
 			<result name="success" type="json">
-			<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
+
 		</action>
-			<action name="AjaxUpadteUser" class="userAction" method="updateUser">
-			<result name="success" type="json">
-			<param name="root">resultMap</param> 
-			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
-		</action>
-		
+
+
 		<action name="AjaxAddAdmin" class="adminAction" method="addAdmin">
 			<result name="success" type="json">
-			<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
+
 		</action>
-		
+
 		<action name="AjaxDeleteAdmins" class="adminAction" method="deleteAdmin">
 			<result name="success" type="json">
-			<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
+
 		</action>
 		<action name="AjaxUpdateAdmin" class="adminAction" method="updateAdmin">
 			<result name="success" type="json">
-			<param name="root">resultMap</param> 
+				<param name="root">resultMap</param>
 			</result>
-			<interceptor-ref name="adminStack"></interceptor-ref>
+
 		</action>
 	</package>
 </struts>

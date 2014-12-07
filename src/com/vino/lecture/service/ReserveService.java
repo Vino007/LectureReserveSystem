@@ -80,6 +80,23 @@ public class ReserveService extends BaseService {
 			throw new RuntimeException();
 		}
 	}
+	
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void deleteAllAttence(long lectureId) throws RuntimeException {
+		String hql="update ReserveInfo r set r.attence=0 where r.lectureId=?";
+		condition=new ArrayList<Object>();
+		try{
+			condition.clear();
+			condition.add(lectureId);
+			reserveDao.updateWithCondition(hql, condition);
+				
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+	}
 	/**
 	 * 通过lectureID 和username添加考勤
 	 * @param id lectureID
@@ -110,6 +127,8 @@ public class ReserveService extends BaseService {
 				reserveInfo.setLectureId(id);
 				reserveInfo.setUsername(username);
 				reserveInfo.setName(user.getName());
+				reserveInfo.setGrade(user.getGrade());
+				reserveInfo.setMajor(user.getMajor());
 				reserveInfo.setAttence(1);
 				reserveDao.add(reserveInfo);//添加预约信息并添加考勤
 				condition.clear();

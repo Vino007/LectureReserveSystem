@@ -149,7 +149,7 @@ body {
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				<div id="myAlert" class="alert alert-success" hidden="true">
 					<a href="#" class="close" data-dismiss="alert">&times;</a> <strong
-						id="alertMsg">添加成功！</strong>
+						id="alertMsg">void</strong>
 				</div>
 				<form action="ajax/AjaxDeleteUsers" method="post">
 					<table id="table" class="table table-hover table-full "
@@ -184,13 +184,14 @@ body {
 							</s:iterator>
 						</tbody>
 					</table>
-					<button type="submit" class="btn btn-default btn-sm center">删除</button>
+					<button type="submit" class="btn btn-danger  center ">删除</button>
 
 				</form>
-				<p>请保证用户名不重复！否则失败</p>
+				<hr>
+				<p class="text-center"><strong>请保证用户名不重复！否则失败</strong></p>
 				<form action="upload/UserFileUploadAction" method="post"
-					enctype="multipart/form-data">
-
+					enctype="multipart/form-data" class="center">
+					
 					<input type="file" name="file" class="btn btn-default btn-xs">
 					<button type="submit" class="btn btn-default btn-xs">导入用户</button>
 				</form>
@@ -251,11 +252,11 @@ body {
 			$(this).ajaxSubmit(function(data){
 				alert(data.result);
 			//	
-				if(data.result=="success"){
-					$("#alertMsg").text("删除成功");
+				if(data.result=="upload_success"){
+					$("#alertMsg").text("上传成功");
 				}
-				else
-					$("#alertMsg").text("删除失败，请重新尝试");
+				else if(data.result=="upload_fail")
+					$("#alertMsg").text("上传失败，请重新尝试");
 					
 					$("#myAlert").show();
 			});
