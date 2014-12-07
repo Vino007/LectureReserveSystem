@@ -99,7 +99,7 @@ public class LectureService extends BaseService {
 		return lectureDao.queryPageWithCondition(pageNo, pageRecord, condition, hql_count, hql_list);		
 	}
 	/**
-	 * 分页查询用户已预约的讲座
+	 * 分页查询用户已签到的讲座
 	 * @param pageNo
 	 * @param pageRecord
 	 * @param user
@@ -108,8 +108,8 @@ public class LectureService extends BaseService {
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=true)
 	public PageBean<LectureInfo> pageQueryReserved(int pageNo,int pageRecord,User user) {
 		
-		String hql_count="select count(*) from LectureInfo l where l.id in (select lectureId from ReserveInfo r where r.username=?)";
-		String hql_list="from LectureInfo l where l.id in (select lectureId from ReserveInfo r where r.username=?)";
+		String hql_count="select count(*) from LectureInfo l where l.id in (select lectureId from ReserveInfo r where r.username=? and r.attence=1)";
+		String hql_list="from LectureInfo l where l.id in (select lectureId from ReserveInfo r where r.username=? and r.attence=1)";
 		condition = new ArrayList<Object>();
 		condition.add(user.getUsername());
 		return lectureDao.queryPageWithCondition(pageNo, pageRecord, condition, hql_count, hql_list);		

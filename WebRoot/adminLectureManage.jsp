@@ -14,11 +14,8 @@
 	rel="stylesheet">
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/dashBoard.css">
-<!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
-<!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+		<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/mycss.css">
 
 </head>
 <body>
@@ -34,45 +31,42 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">讲座预约系统</a>
+				<a class="navbar-brand" href="${pageContext.request.contextPath}/adminLectureManage.jsp">讲座预约系统</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Separated link</a></li>
-							<li class="divider"></li>
-							<li><a href="#">One more separated link</a></li>
-						</ul></li>
-				</ul>
-				<form class="navbar-form navbar-left" role="search">
+				
+				<form class="navbar-form navbar-right" role="search">
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="Search">
 					</div>
-					<button type="submit" class="btn btn-default">Submit</button>
+					<button type="submit" class="btn btn-default">搜索</button>
 				</form>
+				
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Link</a></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+					<li ><a onclick="loadJsp('${pageContext.request.contextPath}/lecture/admin_addLecture.jsp')" href="#">新增讲座</a></li>
+					<li><a onclick="loadJsp('${pageContext.request.contextPath}/AdminQueryAllLectureAction?pageBean.pageNo=1')" href="#">讲座管理</a></li>
+					<li><a onclick="loadJsp('${pageContext.request.contextPath}/AdminManageAttenceAction?pageBean.pageNo=1')" href="#">考勤管理</a></li>
+					<li><a onclick="loadJsp('${pageContext.request.contextPath}/user/admin_addAdmin.jsp')"  href="#">新增管理员</a></li>
+							<li><a onclick="loadJsp('${pageContext.request.contextPath}/user/admin_addUser.jsp')" href="#">新增用户</a></li>
+							<li><a onclick="loadJsp('${pageContext.request.contextPath}/PageQueryUserAction')" href="#">用户管理</a></li>
+							<li><a onclick="loadJsp('${pageContext.request.contextPath}/user/admin_updateAdmin.jsp')" href="#">修改密码</a></li>						
+					
+					<%-- <li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown">用户 <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul></li>
+							<li><a onclick="loadJsp('${pageContext.request.contextPath}/user/admin_addAdmin.jsp')"  href="#">新增管理员</a></li>
+							<li><a onclick="loadJsp('${pageContext.request.contextPath}/user/admin_addUser.jsp')" href="#">新增用户</a></li>
+							<li><a onclick="loadJsp('${pageContext.request.contextPath}/PageQueryUserAction')" href="#">用户管理</a></li>
+							<li><a onclick="loadJsp('${pageContext.request.contextPath}/user/admin_updateAdmin.jsp')" href="#">修改密码</a></li>						
+						
+						</ul></li>		 --%>			
+						
 				</ul>
+				
+				
 			</div>
 			<!-- /.navbar-collapse -->
 		</div>
@@ -89,53 +83,44 @@
 		<div class="row">
 			<div class="col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
-					<%-- <li class="active"><a href="#">Overview <span
-							class="sr-only">(current)</span></a></li> --%>
+					
 
 					<li><a id="a_addLecture"
 						href="#">新增讲座</a></li>
-					<li><a href="AdminQueryAllLectureAction">查询讲座</a></li>
+					<li><a id="a_queryLecture" href="#">讲座管理</a></li>
 					<!-- 查询讲座中有修改讲座，和删除讲座，预约清单 按钮，导出该讲座预约名单 -->
 					<!-- 默认显示一个讲座表，点击显示考勤信息，用户（学号）考勤查询 -->
 
 					<!-- 上传excel，单个修改考勤，查询考勤 -->
-					<li><a href="AdminManageAttenceAction?pageBean.pageNo=1">考勤信息管理</a></li>
+					<li><a id="a_manageAttence" href="#">考勤管理</a></li>
 				</ul>
 
 				<ul class="nav nav-sidebar">
-					<li><a
-						href="${pageContext.request.contextPath}/user/admin_addUser.jsp">新增用户</a></li>
+					<li><a id="a_addUser"
+						href=#>新增用户</a></li>
 					<!-- 用户管理中有批量导入用户，用户增删改查 -->
-					<li><a href="PageQueryUserAction?pageBean.pageNo=1">用户管理</a></li>
+					<li><a id="a_manageUser" href="#">用户管理</a></li>
 					<!-- 基本信息+已听讲座次数， -->
-
-					<li><a href="#">待定</a></li>
+	
 				</ul>
 				<ul class="nav nav-sidebar">
-					<li><a
-						href="${pageContext.request.contextPath}/user/admin_addAdmin.jsp">新增管理员</a></li>
-					<li><a
-						href="${pageContext.request.contextPath}/user/admin_updateAdmin.jsp">修改密码</a></li>
+					<li><a id="a_addAdmin"
+						href="#">新增管理员</a></li>
+					<li><a id="a_updateAdmin"
+						href="#">修改密码</a></li>
 					<li><a href="#" data-toggle="modal" data-target="#myModal">关于</a></li>
 
 				</ul>
 
 			</div>
-			<!--tab的内容  -->
 
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<!-- <h4 class="text-center">欢迎登陆讲座预约系统</h4> -->
-				<div id="div0" ></div>
-				<!-- <div class="tab-content">
-					<div class="tab-pane active" ></div>
-					<div class="tab-pane" id="div1"></div>
-					<div class="tab-pane" id="div2">div2</div>
-				</div> -->
-			</div>
-		</div>
-	</div>
-	
-	<!-- 模态框（Modal） -->
+				
+				<div id="div0" >
+				 <h4 class="text-center">欢迎登陆讲座预约系统</h4>
+				  
+				</div>
+				<!-- 模态框（Modal） -->
 				<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 					aria-labelledby="myModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
@@ -156,10 +141,10 @@
 					</div>
 					<!-- /.modal -->
 				</div>
-
-
-
-
+				
+			</div>
+		</div>
+	</div>
 	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
 	<script src="js/jquery-2.1.1.js"></script>
 	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
@@ -171,6 +156,42 @@
 			$("#div0").load("${pageContext.request.contextPath}/lecture/admin_addLecture.jsp ");
 		});
 });	
+	
+	$(document).ready(function(){
+		$("#a_manageAttence").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/AdminManageAttenceAction?pageBean.pageNo=1");
+		});
+});	
+	
+	$(document).ready(function(){
+		$("#a_queryLecture").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/AdminQueryAllLectureAction?pageBean.pageNo=1");
+		});
+});	
+	
+	$(document).ready(function(){
+		$("#a_addUser").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/user/admin_addUser.jsp");
+		});
+});	
+	$(document).ready(function(){
+		$("#a_manageUser").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/PageQueryUserAction");
+		});
+});	
+	$(document).ready(function(){
+		$("#a_addAdmin").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/user/admin_addAdmin.jsp");
+		});
+});	
+	$(document).ready(function(){
+		$("#a_updateAdmin").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/user/admin_updateAdmin.jsp");
+		});
+});	
+	function loadJsp(url){
+		$("#div0").load(url);
+	}
 	</script>
 
 </body>

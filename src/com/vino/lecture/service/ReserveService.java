@@ -177,6 +177,7 @@ public class ReserveService extends BaseService {
 		try {
 			if (!isAlreadyReserve(reserveInfo)) {
 				if (isCurrentPeopleSmallerThanMaxPeople(reserveInfo)) {
+					reserveInfo.setAttence(0);
 					reserveDao.add(reserveInfo);
 					return "success";
 				} else
@@ -184,6 +185,7 @@ public class ReserveService extends BaseService {
 			} else
 				return "repeat";// ÷ÿ∏¥‘§‘º
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException();
 		}
 	}

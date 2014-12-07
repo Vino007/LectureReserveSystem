@@ -12,137 +12,30 @@
 <!-- Bootstrap -->
 <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dashBoard.css">
-<!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
-<!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-<style type="text/css">
-.table-center {
-	width: 70%;
-	display: table;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.center {
-	width: auto;
-	display: table;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-body {
-	padding-top: 70px;
-}
-
-.text-center {
-	text-align: center;
-}
-</style>
+	<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/mycss.css">
 </head>
 <body>
-	<!-- 导航条 -->
-	<nav class="navbar navbar-default navbar-inverse  navbar-fixed-top "
-		role="navigation">
-		<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed"
-					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">讲座预约系统</a>
-			</div>
-
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse"
-				id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">讲座管理 <span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Separated link</a></li>
-							<li class="divider"></li>
-							<li><a href="#">One more separated link</a></li>
-						</ul></li>
-				</ul>
-				<form class="navbar-form navbar-left" role="search">
-					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Search">
-					</div>
-					<button type="submit" class="btn btn-default">Submit</button>
-				</form>
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Link</a></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Separated link</a></li>
-						</ul></li>
-				</ul>
-			</div>
-			<!-- /.navbar-collapse -->
-		</div>
-		<!-- /.container-fluid -->
-	</nav>
-
-	<!-- 侧边栏 -->
-
-
+	
 	<div class="container-fluid ">
-
-		<div class="row">
-			<div class="col-md-2 sidebar">
-				<ul class="nav nav-sidebar">
-					<%-- <li class="active"><a href="#">Overview <span
-							class="sr-only">(current)</span></a></li> --%>
-					<li class="active"><s:a href="QueryAvailableLectureAction">预约讲座</s:a></li>
-					<li><s:a href="QueryAllLectureAction?pageBean.pageNo=1">查询历史讲座</s:a></li>
-					<li><s:a href="QueryReservedLectureAction?pageBean.pageNo=1">已约讲座查询</s:a></li>
-				</ul>
-				<ul class="nav nav-sidebar">
-					<li><a href="${pageContext.request.contextPath}/user/userInfo.jsp">用户信息</a></li>
-					<li><a href="">关于</a></li>
-					<li><a href=""></a></li>
-					<li><a href=""></a></li>
-					<li><a href=""></a></li>
-				</ul>
-				<ul class="nav nav-sidebar">
-					<li><a href=""></a></li>
-					<li><a href=""></a></li>
-					<li><a href=""></a></li>
-				</ul>
-			</div>
+	<h6>讲座开始前两小时截止预约</h6>
+	<div id="myAlert" class="alert alert-success" hidden="true">
+			<a href="#" class="close" data-dismiss="alert">&times;</a> <strong
+				id="alertMsg">void</strong>
 		</div>
-
-
-		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-			<table id="table"
-				class="table table-bordered table-hover table-center "
+		<table id="table"
+				class="table  table-hover "
 				contenteditable="false">
 				<thead>
 					<tr class="success ">
-						<th style="text-align: center">标题</th>
-						<th style="text-align: center">主讲人</th>
-						<th style="text-align: center">时间</th>
-						<th style="text-align: center">地点</th>
-						<th style="text-align: center">已预约人数</th>
-						<th style="text-align: center">最大允许人数</th>
-						<th colspan="3" style="text-align: center">操作</th>
+						<th >标题</th>
+						<th >主讲人</th>
+						<th >时间</th>
+						<th >地点</th>
+						<th >已预约人数</th>
+						<th >最大允许人数</th>
+						<th>详情</th>
+						<th colspan="2" style="text-align: center">操作</th>
 					</tr>
 				</thead>
 				<tbody id="tbody">
@@ -165,9 +58,11 @@ body {
 									<s:hidden name="reserveInfo.username"
 										value="%{#session.user.username}"></s:hidden>
 									<s:hidden name="reserveInfo.name" value="%{#session.user.name}"></s:hidden>
+									<s:hidden name="reserveInfo.major" value="%{#session.user.major}"></s:hidden>
+									<s:hidden name="reserveInfo.grade" value="%{#session.user.grade}"></s:hidden>
 									<!-- 此id为lectureInfo的id -->
 									<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>
-									<button type="submit" id="reserve" class="btn btn-default">预定</button>
+									<button type="submit" id="reserve" class="btn btn-default btn-sm">预定</button>
 
 								</s:form></td>
 							<td><s:form id="%{id}" action="AjaxCancelReserveLecture"
@@ -178,7 +73,7 @@ body {
 									<!-- 此id为lectureInfo的id -->
 									<s:hidden name="reserveInfo.lectureId" value="%{id}"></s:hidden>
 
-									<button type="submit" id="cancel" class="btn btn-default">取消</button>
+									<button type="submit" id="cancel" class="btn btn-default btn-sm">取消</button>
 								</s:form></td>
 						</tr>
 					</s:iterator>
@@ -187,39 +82,62 @@ body {
 			</table>
 			
 			<!-- 分页 -->
-			<nav>
-				<ul class="pagination center">
-					<li><s:a href="QueryAvailableLectureAction?pageBean.pageNo=1">首页</s:a></li>
-					<s:if test="pageBean.pageNo > 1 ">
-						<li><s:a
-								href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.pageNo-1}">上一页</s:a></li>
-					</s:if>
-					<s:else>
-						<li><s:a href="#">上一页</s:a></li>
-					</s:else>
-					<s:if test="pageBean.pageNo <pageBean.totalPage">
-						<li><s:a
-								href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.pageNo+1}">下一页</s:a></li>
-					</s:if>
-					<s:else>
-						<li><s:a href="#">下一页</s:a></li>
-					</s:else>
-					<li><s:a
-							href="QueryAvailableLectureAction?pageBean.pageNo=%{pageBean.totalPage}">尾页</s:a>
-					</li>
+		<nav>
+			<ul class="pagination center">
+				<li><s:a id="firstPage" href="#" >首页</s:a></li>
 
-				</ul>
-			</nav>
-			<p class="text-center">第${pageBean.pageNo}页/共${pageBean.totalPage}页</p>
-		</div>
+				<li><s:a id="prePage" href="#">上一页</s:a></li>
+
+
+				<li><s:a id="nextPage" href="#">下一页</s:a></li>
+
+
+				<li><s:a id="lastPage" href="#">尾页</s:a></li>
+
+			</ul>
+		</nav>
+		<p id="p_pageNo" hidden="true" >${pageBean.pageNo}</p>
+		<p id="p_totalPage" hidden="true" >${pageBean.totalPage}</p>
+		<p class="text-center">第${pageBean.pageNo}页/共${pageBean.totalPage}页</p>
 	</div>
-
 	<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
 	<script src="${pageContext.request.contextPath}/js/jquery-2.1.1.js"></script>
 	<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/jquery.form.js"></script>
 	<script src="${pageContext.request.contextPath}/js/myajax.js"></script>
+	
+	<script type="text/javascript">
+	var pageNo=$("#p_pageNo").text();
+	var totalPage=$("#p_totalPage").text();
+	pageNo=parseInt(pageNo);
+	totalPage=parseInt(totalPage);
+	$(document).ready(function(){
+		$("#nextPage").click(function() {
+			if(pageNo<totalPage)
+			$("#div0").load("${pageContext.request.contextPath}/QueryAvailableLectureAction?pageBean.pageNo=${pageBean.pageNo+1}");
+		});
+});	
+	$(document).ready(function(){
+		$("#prePage").click(function() {
+			if(pageNo>1)
+			$("#div0").load("${pageContext.request.contextPath}/QueryAvailableLectureAction?pageBean.pageNo=${pageBean.pageNo-1}");
+		});
+});	
+	$(document).ready(function(){
+		$("#firstPage").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/QueryAvailableLectureAction?pageBean.pageNo=1");
+		});
+});	
+	$(document).ready(function(){
+		$("#lastPage").click(function() {
+			$("#div0").load("${pageContext.request.contextPath}/QueryAvailableLectureAction?pageBean.pageNo=${pageBean.totalPage}");
+		});
+});	
+	</script>
+	
+	
+	
 	<script>
 		$(document).ready(function(){
 		$("form").submit(function(){
@@ -227,18 +145,34 @@ body {
 			var id=$(this).attr("id");
 			$(this).ajaxSubmit(function(data){
 				alert(data.result);
-				if(data.result=="reserve_success")
+				if(data.result=="reserve_success"){
 					$("#"+id).children("#reserve").text("已预约");
-					else if(data.result=="cancel_success")
-					$("#"+id).children("#reserve").text("预约");			
+					$("#alertMsg").text("预约成功");}
+					else if(data.result=="cancel_success"){
+					$("#"+id).children("#reserve").text("预约");	
+					$("#alertMsg").text("取消成功");}
+					else if(data.result=="repeat")
+						$("#alertMsg").text("您已经预约过了");
+					else if(data.result=="cancel_fail")
+						$("#alertMsg").text("取消失败，请重新尝试");
+					else if(data.result=="reserve_fail")
+						$("#alertMsg").text("预约失败，请重新尝试");
+					else 
+						$("#alertMsg").text("失败，请重新尝试");
 				
+				$("#myAlert").show();
 			});
 			 return false;//阻止表单默认提交 
 			
 			});
 		});
+		
+	
+		
+	
 	</script>
 	<!-- popover弹出框需要激活才能使用！！！原因是它不是单纯的css插件 -->
+	
 	<script >
 	
 	$(function () { $("[data-toggle='popover']").popover(); 

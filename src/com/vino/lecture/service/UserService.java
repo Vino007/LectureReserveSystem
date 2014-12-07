@@ -70,10 +70,9 @@ private List<Object> condition;
 	
 	@Transactional(propagation=Propagation.REQUIRED,readOnly=false)
 	public void updateUser(User user) throws RuntimeException{
-		String hql="update User u set u.password=?,u.name=? where u.id=?";
+		String hql="update User u set u.password=? where u.id=?";
 		condition=new ArrayList<Object>();
 		condition.add(user.getPassword());
-		condition.add(user.getName());
 		condition.add(user.getId());
 		try{
 			userDao.updateWithCondition(hql, condition);

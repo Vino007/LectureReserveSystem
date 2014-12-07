@@ -108,7 +108,7 @@ public class UserAction extends BaseAction {
 		try {
 			userService.updateUser(user);
 			resultMap.put("result", "success");
-			ActionContext.getContext().getSession().put("user", user);
+			//ActionContext.getContext().getSession().put("user", user);
 		} catch (RuntimeException e) {
 			resultMap.put("result", "fail");
 		}
